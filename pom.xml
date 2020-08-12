@@ -36,6 +36,20 @@
             <optional>true</optional>
         </dependency>
 
+        <!--        aop的启动器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!--        hutool的启动器-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.6.6</version>
+        </dependency>
+
+
         <!--        thymeleaf启动器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

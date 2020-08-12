@@ -10,6 +10,7 @@
 
     <typeAliases>
         <typeAlias type="com.yzx.layuicms.domain.SysUser" alias="user"/>
+        <typeAlias type="com.yzx.layuicms.domain.SysPermission" alias="permission"/>
     </typeAliases>
 
 </configuration>

@@ -2,6 +2,7 @@
 * 技术栈：mybatis plus + springboot + shiro + mysql + thymeleaf 实现
 
 ## day01
-环境搭建、页面修改、路径修改、完成登录认证功能
+完成基于shiro的登录认证、退出登录功能
 
 ## day02
+完成首页左侧导航树

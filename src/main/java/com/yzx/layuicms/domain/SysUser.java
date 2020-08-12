@@ -37,7 +37,7 @@ public class SysUser implements Serializable {
 
     private Integer deptid;
 
-    private LocalDateTime hiredate;
+    private Data hiredate;
 
     private Integer mgr;
 

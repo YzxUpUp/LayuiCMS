@@ -1,5 +1,6 @@
 package com.yzx.layuicms.controller;
 
+import com.yzx.layuicms.common.activerUser;
 import com.yzx.layuicms.service.impl.SysUserServiceImpl;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
@@ -17,27 +18,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 登录页面控制器
  */
 @Controller
-@RequestMapping("/login")
 public class loginController {
 
-    @PostMapping
+    @PostMapping("/")
     public String postlogin(@Param("username") String username,
                             @Param("password") String password,
                             Model model) {
-        Subject subject = SecurityUtils.getSubject();
         try {
+            Subject subject = SecurityUtils.getSubject();
             subject.login(new UsernamePasswordToken(username,password));
-            return "/index";
         }catch (UnknownAccountException e){
             model.addAttribute("error","用户名不存在！");
         }catch (IncorrectCredentialsException e){
             model.addAttribute("error","密码错误！");
         }
-        return "/login";
+        return "login";
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String getlogin() {
-        return "/login";
+        return "login";
+    }
+
+    @RequestMapping("/logout")
+    public String logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "login";
     }
 }

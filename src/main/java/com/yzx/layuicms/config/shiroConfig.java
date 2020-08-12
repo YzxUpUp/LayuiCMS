@@ -1,5 +1,6 @@
 package com.yzx.layuicms.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.yzx.layuicms.shiroRealm.userRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
@@ -35,7 +36,9 @@ public class shiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
 
         //设置默认返回地址
-        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setLoginUrl("/");
+        //设置认证成功返回地址
+        shiroFilterFactoryBean.setSuccessUrl("/index");
 
         return shiroFilterFactoryBean;
     }
@@ -68,6 +71,15 @@ public class shiroConfig {
         //设置该匹配器为自定义Realm的匹配器
         uRealm.setCredentialsMatcher(credentialsMatcher);
         return uRealm;
+    }
+
+    /**
+     * 使得shiro可以和thymeleaf搭配使用
+     * @return
+     */
+    @Bean
+    public ShiroDialect getShiroDialect(){
+        return new ShiroDialect();
     }
 
 }

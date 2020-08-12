@@ -41,6 +41,12 @@ spring:
         reset-enable: true
         login-username: admin
         login-password: 123123
+  thymeleaf:
+    cache: false
+    enabled: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 
 #指定mybatisPlus的配置类和mapper对应xml
 mybatis-plus:

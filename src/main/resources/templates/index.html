@@ -58,14 +58,14 @@
 						<a href="javascript:;"><i class="seraph icon-lock"></i><cite>锁屏</cite></a>
 					</li>
 					<li class="layui-nav-item" id="userInfo">
-						<a href="javascript:;"><img th:src="@{/layuicms2.0/images/face.jpg}" src="../static/layuicms2.0/images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName">超级管理员</cite></a>
+						<a href="javascript:;"><img th:src="@{/layuicms2.0/images/face.jpg}" src="../static/layuicms2.0/images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName" th:text="${user.name}"></cite></a>
 						<dl class="layui-nav-child">
 							<dd><a href="javascript:;" data-url="layuicms2.0/page/user/userInfo.html"><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
 							<dd><a href="javascript:;" data-url="layuicms2.0/page/user/changePwd.html"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
 							<dd><a href="javascript:;" class="showNotice"><i class="layui-icon">&#xe645;</i><cite>系统公告</cite><span class="layui-badge-dot"></span></a></dd>
 							<dd pc><a href="javascript:;" class="functionSetting"><i class="layui-icon">&#xe620;</i><cite>功能设定</cite><span class="layui-badge-dot"></span></a></dd>
 <!--							<dd pc><a href="javascript:;" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>-->
-							<dd><a th:href="@{/login}" href="login.html" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
+							<dd><a th:href="@{/logout}" href="login.html" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
 						</dl>
 					</li>
 				</ul>
@@ -75,7 +75,7 @@
 		<div class="layui-side layui-bg-black">
 			<div class="user-photo">
 				<a class="img" title="我的头像" ><img th:src="@{/layuicms2.0/images/face.jpg}" src="../static/layuicms2.0/images/face.jpg" class="userAvatar"></a>
-				<p>你好！<span class="userName">超级管理员</span>, 欢迎登录</p>
+				<p>你好！<span class="userName" th:text="${user.name}"></span>, 欢迎登录</p>
 			</div>
 			<!-- 搜索 -->
 			<div class="layui-form component">
@@ -143,13 +143,14 @@
 			layer = parent.layer === undefined ? layui.layer : top.layer;
 			tab = layui.bodyTab({
 				openTabNum : "50",  //最大可打开窗口数量
-				url : "layuicms2.0/json/navs2.json" //获取菜单json地址
+				url : "/menu/loadIndexLeftMenuJson" //获取菜单json地址
 			});
 
 			//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
 			function getData(json){
 				$.getJSON(tab.tabConfig.url,function(data){
-					dataStr = data;
+					dataStr = data.data;
+					//重新渲染左侧菜单
 					tab.render();
 					// if(json == "contentManagement"){
 					// 	dataStr = data.contentManagement;
