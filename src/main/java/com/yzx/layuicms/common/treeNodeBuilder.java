@@ -5,6 +5,9 @@ import com.yzx.layuicms.domain.treeNode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 构造层级关系的类
+ */
 public class treeNodeBuilder {
 
     public static List<treeNode> build(List<treeNode> treeNodes,Integer topPid){

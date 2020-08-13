@@ -8,10 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <p>
- * 
- * </p>
- *
+ * 角色权限实体类
  * @author yzx
  * @since 2020-08-12
  */

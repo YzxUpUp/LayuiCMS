@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 首页左侧导航树节点实体类
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
