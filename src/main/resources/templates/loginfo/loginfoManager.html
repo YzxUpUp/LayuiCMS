@@ -11,10 +11,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" th:href="@{/favicon.ico}" href="../../static/layuicms2.0/favicon.ico">
-    <link rel="stylesheet" th:href="@{/layuicms2.0/layui/css/layui.css}"
-          href="../../static/layuicms2.0/layui/css/layui.css" media="all"/>
-    <link rel="stylesheet" th:href="@{/layuicms2.0/css/public.css}" href="../../static/layuicms2.0/css/public.css"
-          media="all"/>
+    <link rel="stylesheet" th:href="@{/layuicms2.0/layui/css/layui.css}" href="../../static/layuicms2.0/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" th:href="@{/layuicms2.0/css/public.css}" href="../../static/layuicms2.0/css/public.css" media="all"/>
 </head>
 <body class="childrenBody">
 <!-- 查询条件开始 -->
@@ -84,11 +82,11 @@
 <!-- 数据表格结束 -->
 
 
-<script type="text/javascript" th:src="@{/layuicms2.0/layui/layui.js}"
-        src="../../static/layuicms2.0/layui/layui.js"></script>
+<script type="text/javascript" th:src="@{/layuicms2.0/layui/layui.js}" src="../../static/layuicms2.0/layui/layui.js"></script>
 
 <script type="text/javascript">
     layui.use(['jquery', 'form', 'table', 'layer', 'laydate'], function () {
+        //设置快捷键
         var $ = layui.jquery;
         var form = layui.form;
         var table = layui.table;
@@ -106,23 +104,23 @@
 
         //加载数据
         var tableIns = table.render({
-            elem: '#loginfoTable' //根据id绑定要渲染的table标签对象
-            , url: '/loginfo/loadAllLoginfo' //从该url处获取JSON数据
+            elem: '#loginfoTable' //根据标签id绑定对应的table标签
+            , url: '/loginfo/loadAllLoginfo' //从指定url获取JSON数据
             , toolbar: '#loginfoToolBar' //开启头部工具栏，并为其绑定左侧模板
             , defaultToolbar: ['filter']
             , title: '用户登陆日志数据表'
             , height: 'full-220'
-            , page: true //是否开启分页，开启后会返回参数到Controller，名称为page和limit
+            , page: true //开启分页，返回page和limit参数
             , limit: 10
             // ,limits: [5,10,15,20]
-            , cols: [[
+            , cols: [ [
                 {type: 'checkbox', fixed: 'left'}
                 , {field: 'id', title: 'ID', align: 'center'}
                 , {field: 'loginname', title: '登陆名称', align: 'center'}
                 , {field: 'loginip', title: '登陆地址', align: 'center'}
                 , {field: 'logintime', title: '登陆时间', align: 'center'}
-                , {fixed: 'right', title: '操作', toolbar: '#loginfoRowBar', align: 'center'} //开启表内行工具栏，根据id绑定模板
-            ]]
+                , {fixed: 'right', title: '操作', toolbar: '#loginfoRowBar', align: 'center'} //开启行工具栏，并根据id绑定
+            ] ]
             , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
                 var result;
                 console.log(this);
@@ -142,6 +140,7 @@
         });
 
         //模糊查询
+        //在对应Controller中设置了判断某些筛选条件非空的设置，调用该方法会激活这些设置进行模糊查询
         form.on("submit(doSearch)", function (data) {
             tableIns.reload({
                 where: data.field,
@@ -152,11 +151,12 @@
             return false;
         });
 
-        //监听表头工具条的事件
+        //监听工具条的事件
         table.on("toolbar(loginfoTable)", function (obj) {
+            //根据lay-event获取工具栏中对应按钮
             switch (obj.event) {
                 case 'batchDelete':
-                    batchDelete();
+                    batchDelete(); //不同lay-event对应不同操作
                     break;
             }
             ;
@@ -176,7 +176,9 @@
         //删除
         function deleteInfo(data) {
             layer.confirm('你确定要删除这条数据吗?', {icon: 3, title: '提示'}, function (index) {
-                $.post("/loginfo/deleteLoginfo", {id: data.id}, function (res) {
+                // alert(data.id);
+                $.post("/loginfo/deleteLoginfo", {id: data.id}, function (res) { //将id传入url，res为从url中get到的数据
+                    // alert(res.code);
                     if (res.code == 200) {
                         tableIns.reload();
                     }
@@ -196,13 +198,14 @@
                     var data = checkStatus.data; //获取选中行的数据
                     var ids = "";
                     $.each(data, function (index, item) {
-                        if (index == 0) {
+                        if (index == 0) { //当前行为第一行
                             ids += "ids=" + item.id;
-                        } else {
+                        } else { //不为第一行
                             ids += "&ids=" + item.id;
                         }
                     })
-                    $.post("/loginfo/batchDeleteLoginfo", ids, function (res) {
+                    // alert(ids);
+                    $.post("/loginfo/batchDeleteLoginfo", ids, function (res) { //res为从url中get到的数据
                         if (res.code == 200) {
                             tableIns.reload();
                         }

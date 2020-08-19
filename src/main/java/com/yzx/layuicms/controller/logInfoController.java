@@ -5,12 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yzx.layuicms.common.dataGridView;
+import com.yzx.layuicms.common.resultObj;
 import com.yzx.layuicms.domain.SysLoginfo;
 import com.yzx.layuicms.service.SysLoginfoService;
 import com.yzx.layuicms.vo.logInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/loginfo")
@@ -42,5 +46,33 @@ public class logInfoController {
 
         //以查询到的所有数据树和数据本身作为参数，创建新的dataGridView对象返回JSON字符串
         return new dataGridView((long) page.getRecords().size(), page.getRecords());
+    }
+
+    @RequestMapping("/deleteLoginfo")
+    public resultObj deleteLoginfo(Integer id) {
+
+        System.out.println(id);
+
+        try {
+            this.service.removeById(id);
+            return resultObj.DELETE_SUCCESS;
+        }catch (Exception e){
+            return resultObj.DELETE_ERROR;
+        }
+
+    }
+
+    @RequestMapping("/batchDeleteLoginfo")
+    public resultObj batchDeleteLoginfo(Integer[] ids) {
+
+        System.out.println(Arrays.asList(ids).toString());
+
+        try {
+            this.service.removeByIds(Arrays.asList(ids));
+            return resultObj.DELETE_SUCCESS;
+        }catch (Exception e){
+            return resultObj.DELETE_ERROR;
+        }
+
     }
 }

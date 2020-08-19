@@ -35,14 +35,14 @@ public class menuController {
         //查询所有菜单
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         //设置只能查询菜单
-        queryWrapper.eq("type", constant.TYPE_MENU);
+        queryWrapper.eq("type", constant.TYPE_MNEU);
         queryWrapper.eq("available", constant.AVAILABLE_TRUE);
         //获取当前登录的用户信息
         activerUser loginUser = (activerUser) SecurityUtils.getSubject().getPrincipal();
         SysUser user = loginUser.getUser();
         //创建一个用于装载权限信息的集合
         List<SysPermission> list = null;
-        if (user.getType() == constant.TYPE_ADMIN) {
+        if (user.getType() == constant.USER_TYPE_SUPER) {
             //如果用户是超级管理员，直接获取所有资源树
             list = permissionService.list(queryWrapper);
         } else {

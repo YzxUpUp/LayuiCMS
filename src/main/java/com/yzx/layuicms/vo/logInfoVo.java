@@ -20,6 +20,9 @@ public class logInfoVo extends SysLoginfo {
     private Integer page;
     private Integer limit;
 
+    //装载多个id实现批量删除
+    private Integer[] ids;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 

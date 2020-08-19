@@ -7,3 +7,6 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 
 ## day02
 完成首页左侧导航树
+
+## day03
+完成登录日志页面查询、删除、批量删除等功能
