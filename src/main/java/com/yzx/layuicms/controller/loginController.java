@@ -20,6 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class loginController {
 
+    /**
+     * 登录验证
+     * @param username
+     * @param password
+     * @param model
+     * @return
+     */
     @PostMapping("/")
     public String postlogin(@Param("username") String username,
                             @Param("password") String password,
@@ -35,11 +42,19 @@ public class loginController {
         return "login";
     }
 
+    /**
+     * 默认跳转到登录页面
+     * @return
+     */
     @GetMapping("/")
     public String getlogin() {
         return "login";
     }
 
+    /**
+     * 登出账户
+     * @return
+     */
     @RequestMapping("/logout")
     public String logout() {
         Subject subject = SecurityUtils.getSubject();

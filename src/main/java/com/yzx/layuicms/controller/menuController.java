@@ -6,6 +6,7 @@ import com.yzx.layuicms.domain.SysPermission;
 import com.yzx.layuicms.domain.SysUser;
 import com.yzx.layuicms.domain.treeNode;
 import com.yzx.layuicms.service.SysPermissionService;
+import com.yzx.layuicms.vo.permissionVo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,11 @@ public class menuController {
     @Autowired
     private SysPermissionService permissionService;
 
+    /**
+     * 加载左侧导航树
+     * @param permissionVo
+     * @return
+     */
     @RequestMapping("/loadIndexLeftMenuJson")
     public dataGridView loadIndexLeftMenuJson(permissionVo permissionVo) {
         //查询所有菜单

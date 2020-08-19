@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 封装完整首页左侧导航树信息的实体类
+ * 封装用以转换为JSON的数据信息
  */
 @Data
 @AllArgsConstructor
