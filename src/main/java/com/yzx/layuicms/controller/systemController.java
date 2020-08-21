@@ -34,4 +34,13 @@ public class systemController {
         return "/notice/noticeManager";
     }
 
+    /**
+     * 跳转到图标页面
+     * @return
+     */
+    @RequestMapping("/icon")
+    public String icon() {
+        return "/icon";
+    }
+
 }

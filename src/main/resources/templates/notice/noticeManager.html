@@ -161,10 +161,11 @@
             type: 'datetime'
         });
 
-        //根据标签id初始化富文本
+        //根据标签id初始化富文本编辑器
         var editIndex = layedit.build('content',{
             tool: ['strong', 'italic', 'underline', 'del', 'face' , '|' ,'left' ,'center' ,'right']
         });
+
         //加载 数据
         var tableIns = table.render({
             elem: '#noticeTable' //根据id绑定对应的table标签
@@ -249,6 +250,7 @@
             mainIndex = layer.open({
                 type: 1,
                 content: $("#addOrUpdateDiv"),
+                // content: 'http://blog.yzxupup.top/',
                 area: ['800px', '600px'],
                 title: '发布公告',
                 success: function () {

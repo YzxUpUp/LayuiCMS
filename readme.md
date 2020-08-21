@@ -10,3 +10,6 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 
 ## day03
 完成登录日志页面查询、删除、批量删除等功能
+
+## day04
+完成公告页面、图标页面，左侧导航树其他管理模块全部完成
