@@ -11,6 +11,8 @@
     <typeAliases>
         <typeAlias type="com.yzx.layuicms.domain.SysUser" alias="user"/>
         <typeAlias type="com.yzx.layuicms.domain.SysPermission" alias="permission"/>
+        <typeAlias type="com.yzx.layuicms.domain.SysLoginfo" alias="loginfo"/>
+        <typeAlias type="com.yzx.layuicms.domain.SysNotice" alias="notice"/>
     </typeAliases>
 
 </configuration>

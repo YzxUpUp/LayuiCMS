@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/sys")
 public class systemController {
 
-//    @RequestMapping("/img")
-//    public String img() {
-//        return "/img/images";
-//    }
-
     /**
      * 跳转首页中心部分
      * @return
@@ -21,11 +16,6 @@ public class systemController {
         return "/main";
     }
 
-//    @RequestMapping("/news")
-//    public String news() {
-//        return "/news/newsList";
-//    }
-
     /**
      * 跳转日志信息页面
      * @return
@@ -33,6 +23,15 @@ public class systemController {
     @RequestMapping("/loginfo")
     public String loginfo() {
         return "/loginfo/loginfoManager";
+    }
+
+    /**
+     * 跳转到公告页面
+     * @return
+     */
+    @RequestMapping("/notice")
+    public String notice() {
+        return "/notice/noticeManager";
     }
 
 }

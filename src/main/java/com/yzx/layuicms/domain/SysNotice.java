@@ -11,25 +11,26 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 日志信息实体类
+ * 公告实体类
  * @author yzx
- * @since 2020-08-13
+ * @since 2020-08-21
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SysLoginfo implements Serializable {
+public class SysNotice implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String loginname;
+    private String title;
 
-    private String loginip;
+    private String opername;
 
-    private Date logintime;
+    private Date createtime;
 
+    private String content;
 
 }

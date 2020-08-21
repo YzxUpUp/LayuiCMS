@@ -48,6 +48,11 @@ public class logInfoController {
         return new dataGridView((long) page.getRecords().size(), page.getRecords());
     }
 
+    /**
+     * 根据id删除单条日志信息
+     * @param id
+     * @return
+     */
     @RequestMapping("/deleteLoginfo")
     public resultObj deleteLoginfo(Integer id) {
 
@@ -62,6 +67,11 @@ public class logInfoController {
 
     }
 
+    /**
+     * 根据id删除多条日志信息
+     * @param ids
+     * @return
+     */
     @RequestMapping("/batchDeleteLoginfo")
     public resultObj batchDeleteLoginfo(Integer[] ids) {
 
