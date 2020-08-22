@@ -13,6 +13,7 @@
         <typeAlias type="com.yzx.layuicms.domain.SysPermission" alias="permission"/>
         <typeAlias type="com.yzx.layuicms.domain.SysLoginfo" alias="loginfo"/>
         <typeAlias type="com.yzx.layuicms.domain.SysNotice" alias="notice"/>
+        <typeAlias type="com.yzx.layuicms.domain.SysDept" alias="dept"/>
     </typeAliases>
 
 </configuration>

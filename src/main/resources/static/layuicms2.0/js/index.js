@@ -103,7 +103,7 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
             for (var i = 0; i < menu.length; i++) {
                 openTitle = '';
                 if (menu[i].icon) {
-                    if (menu[i].icon.split("-")[0] == 'icon') {
+                    if (menu[i].icon.split("-")[0] == 'templates.system.icon') {
                         openTitle += '<i class="seraph ' + menu[i].icon + '"></i>';
                     } else {
                         openTitle += '<i class="layui-icon">' + menu[i].icon + '</i>';

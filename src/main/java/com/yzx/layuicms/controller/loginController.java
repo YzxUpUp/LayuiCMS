@@ -1,18 +1,28 @@
 package com.yzx.layuicms.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yzx.layuicms.common.activerUser;
+import com.yzx.layuicms.domain.SysLoginfo;
+import com.yzx.layuicms.domain.SysUser;
+import com.yzx.layuicms.service.SysLoginfoService;
+import com.yzx.layuicms.service.SysUserService;
 import com.yzx.layuicms.service.impl.SysUserServiceImpl;
+import com.yzx.layuicms.util.ipUtil;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 登录页面控制器

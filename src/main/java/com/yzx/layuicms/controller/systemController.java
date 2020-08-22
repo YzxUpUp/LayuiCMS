@@ -22,7 +22,7 @@ public class systemController {
      */
     @RequestMapping("/loginfo")
     public String loginfo() {
-        return "/loginfo/loginfoManager";
+        return "/system/loginfo/loginfoManager";
     }
 
     /**
@@ -31,7 +31,7 @@ public class systemController {
      */
     @RequestMapping("/notice")
     public String notice() {
-        return "/notice/noticeManager";
+        return "/system/notice/noticeManager";
     }
 
     /**
@@ -40,7 +40,34 @@ public class systemController {
      */
     @RequestMapping("/icon")
     public String icon() {
-        return "/icon";
+        return "/system/icon";
+    }
+
+    /**
+     * 跳转到部门管理页面
+     * @return
+     */
+    @RequestMapping("/dept")
+    public String dept() {
+        return "/system/dept/deptManager";
+    }
+
+    /**
+     * 跳转到部门管理页面 - left
+     * @return
+     */
+    @RequestMapping("/deptLeft")
+    public String deptLeft() {
+        return "/system/dept/deptLeft";
+    }
+
+    /**
+     * 跳转到部门管理页面 - right
+     * @return
+     */
+    @RequestMapping("/deptRight")
+    public String deptRight() {
+        return "/system/dept/deptRight";
     }
 
 }

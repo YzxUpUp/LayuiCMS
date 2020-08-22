@@ -13,3 +13,8 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 
 ## day04
 完成公告页面、图标页面，左侧导航树其他管理模块全部完成
+
+## day05
+完成部门管理页面相关功能，目前未解决问题：
+* 更新弹出层父级部门无法回显
+* 部门数据未设置缓存
