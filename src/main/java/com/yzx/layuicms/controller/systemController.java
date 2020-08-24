@@ -80,7 +80,7 @@ public class systemController {
     }
 
     /**
-     * 跳转到菜单管理页面
+     * 跳转到菜单管理页面 - left
      * @return
      */
     @RequestMapping("/menuLeft")
@@ -89,12 +89,48 @@ public class systemController {
     }
 
     /**
-     * 跳转到菜单管理页面
+     * 跳转到菜单管理页面 - right
      * @return
      */
     @RequestMapping("/menuRight")
     public String menuRight() {
         return "/system/menu/menuRight";
+    }
+
+    /**
+     * 跳转到权限管理页面
+     * @return
+     */
+    @RequestMapping("/permission")
+    public String permission() {
+        return "/system/permission/permissionManager";
+    }
+
+    /**
+     * 跳转到权限管理页面 - left
+     * @return
+     */
+    @RequestMapping("/permissionLeft")
+    public String permissionLeft() {
+        return "/system/permission/permissionLeft";
+    }
+
+    /**
+     * 跳转到权限管理页面 - right
+     * @return
+     */
+    @RequestMapping("/permissionRight")
+    public String permissionRight() {
+        return "/system/permission/permissionRight";
+    }
+
+    /**
+     * 跳转到角色管理页面
+     * @return
+     */
+    @RequestMapping("/role")
+    public String role() {
+        return "/system/role/roleManager";
     }
 
 }

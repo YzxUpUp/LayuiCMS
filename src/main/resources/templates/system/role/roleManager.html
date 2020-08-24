@@ -29,9 +29,15 @@
             <form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form layui-form-pane">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">菜单名称</label>
+                        <label class="layui-form-label">角色名称</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="title" autocomplete="off" class="layui-input">
+                            <input type="text" name="name" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">角色备注</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="remark" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -51,19 +57,22 @@
 
         <!--数据表格开始-->
         <div>
-            <table class="layui-hide" id="menuTable" lay-filter="menuTable"></table>
-            <div id="menuToolBar" style="display: none;">
+            <table class="layui-hide" id="roleTable" lay-filter="roleTable"></table>
+            <div id="roleToolBar" style="display: none;">
                 <button type="button" lay-event="add" class="layui-btn layui-btn-sm"><span
-                        class="layui-icon layui-icon-add-1"></span>添加菜单
+                        class="layui-icon layui-icon-add-1"></span>添加角色
                 </button>
             </div>
 
-            <div id="menuRowBar" style="display: none;">
+            <div id="roleRowBar" style="display: none;">
                 <button type="button" lay-event="update" class="layui-btn layui-btn-sm"><span
                         class="layui-icon layui-icon-edit"></span>更新
                 </button>
                 <button type="button" lay-event="delete" class="layui-btn layui-btn-sm layui-btn-danger"><span
                         class="layui-icon layui-icon-delete"></span>删除
+                </button>
+                <button type="button" lay-event="allocation" class="layui-btn layui-btn-sm layui-btn-normal"><span
+                        class="layui-icon layui-icon-group"></span>分配权限
                 </button>
             </div>
         </div>
@@ -73,51 +82,25 @@
         <div style="display: none;padding: 5px" id="addOrUpdateDiv">
             <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">父级菜单</label>
-                    <div class="layui-input-block">
-                        <input type="hidden" name="pid" id="pid">
-                        <ul id="menuTree" class="dtree" data-id="0"></ul>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">菜单名称</label>
+                    <label class="layui-form-label">角色名称</label>
                     <div class="layui-input-block">
                         <input type="hidden" name="id">
-                        <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" class="layui-input">
+                        <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入角色名称" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">菜单图标</label>
+                    <label class="layui-form-label">角色备注</label>
                     <div class="layui-input-block">
-                        <input type="text" name="icon" lay-verify="required" autocomplete="off" placeholder="请输入菜单图标unicode值" class="layui-input">
+                        <textarea class="layui-textarea" name="remark" id="content" placeholder="请输入角色备注"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">菜单地址</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="href" lay-verify="required" autocomplete="off" placeholder="请输入菜单地址" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">是否展开</label>
-                        <div class="layui-input-inline">
-                            <input type="radio" name="open" value="1" title="展开" checked="">
-                            <input type="radio" name="open" value="0" title="不展开" >
-                        </div>
-                    </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">是否可用</label>
                         <div class="layui-input-inline">
                             <input type="radio" name="available" value="1" title="可用" checked="">
                             <input type="radio" name="available" value="0" title="不可用" >
                         </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">排序码</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="ordernum" id="ordernum" lay-verify="required|number"  autocomplete="off" placeholder="请输入排序码[>0]" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -130,48 +113,64 @@
         </div>
         <!-- 添加和修改的弹出层结束 -->
 
+        <!-- 分配权限的弹出层开始 -->
+        <div style="display: none;padding: 5px" id="allocationDiv">
+            <form action="" method="post" class="layui-form layui-form-pane" id="allocationFrm" lay-filter="allocationFrm">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择权限</label>
+                    <div class="layui-input-block">
+                        <input type="hidden" name="pid" id="pid">
+                        <ul id="roleTree" class="dtree" data-id="0"></ul>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align: center;">
+                        <button type="button" class="layui-btn" lay-submit="" id="doAllocation" ><span class="layui-icon layui-icon-add-1"></span>确认分配</button>
+                        <button type="reset" class="layui-btn layui-btn-warm"><span class="layui-icon layui-icon-refresh-1"></span>重置选择</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 分配权限的弹出层结束 -->
+
         <script type="text/javascript" th:src="@{/layuicms2.0/layui/layui.js}"
                 src="../../../static/layuicms2.0/layui/layui.js"></script>
         <script>
             var tableIns;
             layui.extend({
                 dtree: '/layuicms2.0/layui_ext/dtree/dtree'   //扩展dtree组件
-            }).use(['jquery', 'form', 'table','dtree','layer'],function () {
+            }).use(['jquery', 'form', 'table','layer','dtree'],function () {
                 //绑定快捷键
                 var $ = layui.jquery;
                 var form = layui.form;
                 var table = layui.table;
-                var dtree = layui.dtree;
                 var layer = layui.layer;
+                var dtree = layui.dtree;
 
                 //加载数据表格
                 tableIns = table.render({
-                    elem: '#menuTable' //根据id绑定对应的table标签
-                    , url: '/menu/loadAllMenu' //从该地址获取数据
-                    , toolbar: '#menuToolBar' //开启头部工具栏，并为其绑定左侧模板
+                    elem: '#roleTable' //根据id绑定对应的table标签
+                    , url: '/role/loadAllRole' //从该地址获取数据
+                    , toolbar: '#roleToolBar' //开启头部工具栏，并为其绑定左侧模板
                     , defaultToolbar: ['filter']
-                    , title: '菜单数据表'
+                    , title: '角色数据表'
                     , height: 'full-205'
                     , page: true //开启分页，会回传page和limit参数
                     , cols: [ [
-                        {field: 'id', title: 'ID', align: 'center',width: '100'}
-                        , {field: 'title', title: '菜单名称', align: 'center',width: '150'}
-                        , {field: 'icon', title: '菜单图标', align: 'center',width: '150',templet:function (obj) {
-                                return obj.icon.charAt(0) == '&' ? '<i class="layui-icon">'+obj.icon+'</i>' : '暂无图标';
-                            }}
-                        , {field: 'ordernum', title: '优先级', align: 'center',width: '100'}
-                        , {field: 'href', title: '菜单地址', align: 'center',width: '100'}
+                        {field: 'id', title: 'ID', align: 'center',width:'80'}
+                        , {field: 'name', title: '角色名称', align: 'center',width:'150'}
+                        , {field: 'remark', title: '角色备注', align: 'center',width:'510'}
                         , {
                             field: 'open', title: '展开', align: 'center', templet: function (obj) {
                                 return obj.open == 1 ? '<font color="blue">Y</font>' : '<font color="red">N</font>';
-                            },width: '100'
+                            },width:'150'
                         }
                         , {
                             field: 'available', title: '工作', align: 'center', templet: function (obj) {
                                 return obj.available == 1 ? '<font style="color: blue">Y</font>' : '<font style="color: red">N</font>';
-                            },width: '100'
+                            },width:'150'
                         }
-                        , {fixed: 'right', title: '操作', toolbar: '#menuRowBar', align: 'center',width: '255'}
+                        , {fixed: 'right', title: '操作', toolbar: '#roleRowBar', align: 'center',width:'300'}
                     ] ]
                     , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
                         var result;
@@ -203,7 +202,7 @@
                 });
 
                 //监听头工具栏
-                table.on("toolbar(menuTable)",function (obj) {
+                table.on("toolbar(roleTable)",function (obj) {
                     switch (obj.event) {
                         case "add":
                             openAddLayer();
@@ -211,14 +210,17 @@
                 });
 
                 //监听行工具栏
-                table.on("tool(menuTable)",function (obj) {
+                table.on("tool(roleTable)",function (obj) {
                     var data = obj.data;
                     switch (obj.event) {
                         case "update":
                             openUpdateLayer(data);
                             break;
                         case "delete":
-                            deleteMenu(data);
+                            deleteRole(data);
+                            break;
+                        case "allocation":
+                            openAllocationRoleLayer(data);
                     }
                 });
 
@@ -232,10 +234,10 @@
                         type: 1,
                         area: ['700px','500px'],
                         content: $("#addOrUpdateDiv"),
-                        title: '添加新的菜单',
+                        title: '添加新的角色',
                         success: function () {
                             $("#dataFrm")[0].reset();
-                            url="/menu/addMenu";
+                            url="/role/addRole";
                         }
                     });
                 }
@@ -246,39 +248,24 @@
                         type: 1,
                         area: ['700px','500px'],
                         content: $("#addOrUpdateDiv"),
-                        title: '修改菜单信息',
+                        title: '修改角色信息',
                         success: function () {
-                            $("#dataFrm")[0].reset();
                             //装载数据
                             form.val("dataFrm",data);
-                            //选中之前父级的部门
-                            dtree.dataInit("menuTree", data.pid);
-                            dtree.selectVal("menuTree");
-                            url="/menu/updateMenu";
+                            url="/role/updateRole";
                         }
                     });
                 }
 
-                //删除菜单的方法
-                function deleteMenu(data) {
-                    $.post("/menu/checkMenu",{id:data.id},function (res) {
-                        if(res.code == 200){
-                            layer.confirm("确定要删除这个菜单吗？",function () {
-                                $.post("/menu/deleteMenu",{id:data.id},function (res) {
-                                    if(res.code == 200){
-                                        tableIns.reload();
-                                        //刷新下拉树
-                                        Dtree.reload();
-                                        //刷新左边的菜单树
-                                        window.parent.left.Dtree.reload();
-                                    }
-                                    layer.msg(res.msg);
-                                    layer.close(mainIndex);
-                                });
-                            });
-                        }else{
-                            layer.msg("该菜单存在子菜单，请先删除子菜单！");
-                        }
+                //删除角色的方法
+                function deleteRole(data) {
+                    layer.confirm("确定要删除这个角色吗？",function () {
+                        $.post("/role/deleteRole",{id:data.id},function (res) {
+                            if(res.code == 200){
+                                tableIns.reload();
+                            }
+                            layer.msg(res.msg);
+                        });
                     });
                 }
 
@@ -287,45 +274,43 @@
                     var data = $("#dataFrm").serialize();
                     // alert(data);
                     $.post(url,data,function (res) {
-                        if(res.code==200){
-                            tableIns.reload();
-                            //刷新下拉树
-                            Dtree.reload();
-                            //刷新左边的菜单树
-                            window.parent.left.Dtree.reload();
-                        }
                         layer.msg(res.msg);
+                        tableIns.reload();
                     });
                     layer.close(mainIndex);
                 });
 
-                //初始化父级菜单下拉树
+                //打开分配权限的弹出层
+                function openAllocationRoleLayer(data) {
+                    mainIndex = layer.open({
+                        type: 1,
+                        area: ['700px','500px'],
+                        content: $("#allocationDiv"),
+                        title: '分配角色权限',
+                        success: function () {
+                            alert(1);
+                        }
+                    });
+                }
+
+                //初始化分配权限的下拉树
                 Dtree = dtree.renderSelect({
-                    elem: "#menuTree",
+                    elem: "#roleTree",
                     width: "100%",
-                    url: "/menu/loadMenuLeft",
+                    url: "/role/loadRoleTree",
                     dataStyle: "layuiStyle",  //使用layui风格的数据格式
+                    dataFormat: "list",  //配置data的风格为list
                     response:{message:"msg",statusCode:0}  //修改response中返回数据的定义
+                    // checkbar:true //开启复选框
                 });
 
                 //监听下拉树点击的方法
                 dtree.on("node(menuTree)" ,function(obj){
-                    $("#pid").val(obj.param.nodeId);
+                    alert(1);
                 });
 
             });
 
-            //页面左侧导航树联动
-            function reloadTable(id){
-                tableIns.reload({
-                    where:{
-                        id:id
-                    },
-                    page:{
-                        curr:1
-                    }
-                });
-            }
         </script>
     </body>
 </html>
