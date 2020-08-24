@@ -70,4 +70,31 @@ public class systemController {
         return "/system/dept/deptRight";
     }
 
+    /**
+     * 跳转到菜单管理页面
+     * @return
+     */
+    @RequestMapping("/menu")
+    public String menu() {
+        return "/system/menu/menuManager";
+    }
+
+    /**
+     * 跳转到菜单管理页面
+     * @return
+     */
+    @RequestMapping("/menuLeft")
+    public String menuLeft() {
+        return "/system/menu/menuLeft";
+    }
+
+    /**
+     * 跳转到菜单管理页面
+     * @return
+     */
+    @RequestMapping("/menuRight")
+    public String menuRight() {
+        return "/system/menu/menuRight";
+    }
+
 }

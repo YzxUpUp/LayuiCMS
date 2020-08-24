@@ -255,24 +255,6 @@
         var url;
         var Dtree;
 
-        //打开修改弹出层
-        function openUpdateLayer(data) {
-            mainIndex = layer.open({
-                type: 1,
-                area: ['700px','500px'],
-                content: $("#addOrUpdateDiv"),
-                title: '修改部门信息',
-                success: function () {
-                    //装载数据
-                    form.val("dataFrm",data);
-                    //选中之前父级的部门
-                    dtree.dataInit("deptTree", data.pid);
-                    dtree.selectVal("deptTree");
-                    url="/dept/updateDept";
-                }
-            });
-        }
-
         //打开添加弹出层
         function openAddLayer() {
             mainIndex = layer.open({
@@ -281,7 +263,27 @@
                 content: $("#addOrUpdateDiv"),
                 title: '添加新的部门',
                 success: function () {
+                    $("#dataFrm")[0].reset();
                     url="/dept/addDept";
+                }
+            });
+        }
+
+        //打开修改弹出层
+        function openUpdateLayer(data) {
+            mainIndex = layer.open({
+                type: 1,
+                area: ['700px','500px'],
+                content: $("#addOrUpdateDiv"),
+                title: '修改部门信息',
+                success: function () {
+                    $("#dataFrm")[0].reset();
+                    //装载数据
+                    form.val("dataFrm",data);
+                    //选中之前父级的部门
+                    dtree.dataInit("deptTree", data.parentId);
+                    dtree.selectVal("deptTree");
+                    url="/dept/updateDept";
                 }
             });
         }
