@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yzx.layuicms.mapper.SysRoleMapper">
+    <insert id="saveRolePermission">
+        insert into sys_role_permission
+        values (#{rid},#{pid});
+    </insert>
 
+    <delete id="deleteRolePermission">
+        delete from sys_role_permission
+        where rid = #{rid};
+    </delete>
+
+    <select id="getPermissionIdByRoleId" resultType="java.lang.Integer">
+        select pid
+        from sys_role_permission
+        where rid = #{rid};
+    </select>
 </mapper>

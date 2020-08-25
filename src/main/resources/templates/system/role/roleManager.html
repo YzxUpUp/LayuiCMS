@@ -114,22 +114,8 @@
         <!-- 添加和修改的弹出层结束 -->
 
         <!-- 分配权限的弹出层开始 -->
-        <div style="display: none;padding: 5px" id="allocationDiv">
-            <form action="" method="post" class="layui-form layui-form-pane" id="allocationFrm" lay-filter="allocationFrm">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">选择权限</label>
-                    <div class="layui-input-block">
-                        <input type="hidden" name="pid" id="pid">
-                        <ul id="roleTree" class="dtree" data-id="0"></ul>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block" style="text-align: center;">
-                        <button type="button" class="layui-btn" lay-submit="" id="doAllocation" ><span class="layui-icon layui-icon-add-1"></span>确认分配</button>
-                        <button type="reset" class="layui-btn layui-btn-warm"><span class="layui-icon layui-icon-refresh-1"></span>重置选择</button>
-                    </div>
-                </div>
-            </form>
+        <div style="display: none;" id="allocationDiv">
+            <ul id="roleTree" class="dtree" data-id="0"></ul>
         </div>
         <!-- 分配权限的弹出层结束 -->
 
@@ -206,6 +192,7 @@
                     switch (obj.event) {
                         case "add":
                             openAddLayer();
+                            break;
                     }
                 });
 
@@ -221,6 +208,7 @@
                             break;
                         case "allocation":
                             openAllocationRoleLayer(data);
+                            break;
                     }
                 });
 
@@ -284,31 +272,42 @@
                 function openAllocationRoleLayer(data) {
                     mainIndex = layer.open({
                         type: 1,
-                        area: ['700px','500px'],
                         content: $("#allocationDiv"),
-                        title: '分配角色权限',
-                        success: function () {
-                            alert(1);
+                        area: ['400px', '600px'],
+                        title: '分配【' + data.name + '】的权限',
+                        btn: ['确认分配'],
+                        btnAlign: 'c'
+                        ,yes: function(index, layero){
+                            //得到树选中的所有节点
+                            var permissionData = dtree.getCheckbarNodesParam("roleTree");
+
+                            //生成http请求字符串
+                            var params="roleId="+data.id;
+                            //遍历选中节点的id，拼接字符串
+                            $.each(permissionData,function(index,item){
+                                params+="&ids="+item.nodeId; //roleId=xxx&ids=xx,xx,xx,xx,………………
+                            });
+
+                            //向服务器发送请求
+                            $.post("/role/saveRolePermission",params,function(res){
+                                layer.close(mainIndex);
+                                layer.msg(res.msg);
+                            })
+                        }
+                        ,success: function () {
+                            //根据角色ID请求权限和菜单tree的json数据
+                            dtree.render({
+                                elem: "#roleTree",
+                                url: "/role/loadRoleTree?roleId=" + data.id,
+                                dataStyle: "layuiStyle",  //使用layui风格的数据格式
+                                dataFormat: "list",  //配置data的风格为list
+                                response: {message: "msg", statusCode: 0},  //修改response中返回数据的定义
+                                checkbar: true,
+                                checkbarType: "all" // 默认就是all，其他的值为： no-all  p-casc   self  only
+                            });
                         }
                     });
                 }
-
-                //初始化分配权限的下拉树
-                Dtree = dtree.renderSelect({
-                    elem: "#roleTree",
-                    width: "100%",
-                    url: "/role/loadRoleTree",
-                    dataStyle: "layuiStyle",  //使用layui风格的数据格式
-                    dataFormat: "list",  //配置data的风格为list
-                    response:{message:"msg",statusCode:0}  //修改response中返回数据的定义
-                    // checkbar:true //开启复选框
-                });
-
-                //监听下拉树点击的方法
-                dtree.on("node(menuTree)" ,function(obj){
-                    alert(1);
-                });
-
             });
 
         </script>

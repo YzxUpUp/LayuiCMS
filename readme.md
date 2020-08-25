@@ -28,3 +28,6 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 解决问题：
 * 部门更新弹出层中，父级部门无法回显的问题
 * 角色管理页面中，分配权限功能未完成
+
+## day07
+完成角色管理页面分配权限功能
