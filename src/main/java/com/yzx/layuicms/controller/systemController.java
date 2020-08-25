@@ -133,4 +133,31 @@ public class systemController {
         return "/system/role/roleManager";
     }
 
+    /**
+     * 跳转到用户管理页面
+     * @return
+     */
+    @RequestMapping("/user")
+    public String user() {
+        return "/system/user/userManager";
+    }
+
+    /**
+     * 跳转到用户管理页面 - left
+     * @return
+     */
+    @RequestMapping("/userLeft")
+    public String userLeft() {
+        return "/system/user/userLeft";
+    }
+
+    /**
+     * 跳转到用户管理页面 - right
+     * @return
+     */
+    @RequestMapping("/userRight")
+    public String userRight() {
+        return "/system/user/userRight";
+    }
+
 }
