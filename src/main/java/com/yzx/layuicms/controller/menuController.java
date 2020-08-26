@@ -10,6 +10,8 @@ import com.yzx.layuicms.domain.SysPermission;
 import com.yzx.layuicms.domain.SysUser;
 import com.yzx.layuicms.domain.treeNode;
 import com.yzx.layuicms.service.SysPermissionService;
+import com.yzx.layuicms.service.SysRoleService;
+import com.yzx.layuicms.service.SysUserService;
 import com.yzx.layuicms.vo.deptVo;
 import com.yzx.layuicms.vo.permissionVo;
 import org.apache.shiro.SecurityUtils;
@@ -30,6 +32,12 @@ public class menuController {
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private SysUserService userService;
+
+    @Autowired
+    private SysRoleService roleService;
 
     /**
      * 加载左侧导航树
@@ -53,6 +61,12 @@ public class menuController {
             list = permissionService.list(queryWrapper);
         } else {
             //否则根据用户ID+角色+权限去查询
+            //根据用户id查角色id
+            Integer roleIdByUserId = this.userService.findRoleIdByUserId(user.getId());
+            //根据角色id查询角色拥有的权限id
+            List<Integer> permissionIdByRoleId = this.roleService.getPermissionIdByRoleId(roleIdByUserId);
+            //设置筛选条件，展示的菜单id必须在查询结果中
+            queryWrapper.in("id",permissionIdByRoleId);
             list = permissionService.list(queryWrapper);
         }
 
@@ -97,6 +111,12 @@ public class menuController {
             list = permissionService.list(queryWrapper);
         } else {
             //否则根据用户ID+角色+权限去查询
+            //根据用户id查角色id
+            Integer roleIdByUserId = this.userService.findRoleIdByUserId(user.getId());
+            //根据角色id查询角色拥有的权限id
+            List<Integer> permissionIdByRoleId = this.roleService.getPermissionIdByRoleId(roleIdByUserId);
+            //设置筛选条件，展示的菜单id必须在查询结果中
+            queryWrapper.in("id",permissionIdByRoleId);
             list = permissionService.list(queryWrapper);
         }
 

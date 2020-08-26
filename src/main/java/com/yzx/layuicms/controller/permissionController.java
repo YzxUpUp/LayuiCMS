@@ -9,6 +9,8 @@ import com.yzx.layuicms.domain.SysPermission;
 import com.yzx.layuicms.domain.SysUser;
 import com.yzx.layuicms.domain.treeNode;
 import com.yzx.layuicms.service.SysPermissionService;
+import com.yzx.layuicms.service.SysRoleService;
+import com.yzx.layuicms.service.SysUserService;
 import com.yzx.layuicms.vo.permissionVo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,12 @@ public class permissionController {
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private SysUserService userService;
+
+    @Autowired
+    private SysRoleService roleService;
 
     /**
      * 加载权限管理页面左侧导航树，从0开始遍历，此处与菜单管理一致
@@ -50,6 +58,12 @@ public class permissionController {
             list = permissionService.list(queryWrapper);
         } else {
             //否则根据用户ID+角色+权限去查询
+            //根据用户id查角色id
+            Integer roleIdByUserId = this.userService.findRoleIdByUserId(user.getId());
+            //根据角色id查询角色拥有的权限id
+            List<Integer> permissionIdByRoleId = this.roleService.getPermissionIdByRoleId(roleIdByUserId);
+            //设置筛选条件，展示的菜单id必须在查询结果中
+            queryWrapper.in("id",permissionIdByRoleId);
             list = permissionService.list(queryWrapper);
         }
 
@@ -89,11 +103,22 @@ public class permissionController {
         wrapper.eq(perVo.getId() != null, "id", perVo.getId())
                 .or()
                 .eq(perVo.getId() != null, "pid", perVo.getId());
+
+        //获取当前登录的用户信息
+//        activerUser loginUser = (activerUser) SecurityUtils.getSubject().getPrincipal();
+//        SysUser user = loginUser.getUser();
+//        //否则根据用户ID+角色+权限去查询
+//        //根据用户id查角色id
+//        Integer roleIdByUserId = this.userService.findRoleIdByUserId(user.getId());
+//        //根据角色id查询角色拥有的权限id
+//        List<Integer> permissionIdByRoleId = this.roleService.getPermissionIdByRoleId(roleIdByUserId);
+//
+//        //设置筛选条件，展示的菜单id必须在查询结果中
+//        wrapper.in("id",permissionIdByRoleId);
         wrapper.orderByAsc("ordernum");
 
         //使用服务类根据page对象和筛选条件进行分页数据查找
         this.permissionService.page(page, wrapper);
-
         //以查询到的所有数据树和数据本身作为参数，创建新的dataGridView对象返回JSON字符串
         return new dataGridView((long) page.getRecords().size(), page.getRecords());
     }

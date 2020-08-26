@@ -1,11 +1,13 @@
 package com.yzx.layuicms.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import java.util.Date;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -39,9 +41,15 @@ public class SysUser implements Serializable {
 
     private Integer deptid;
 
+    @TableField(exist = false)
+    private String deptName;
+
     private Date hiredate;
 
     private Integer mgr;
+
+    @TableField(exist = false)
+    private String mgrName;
 
     private Integer available;
 

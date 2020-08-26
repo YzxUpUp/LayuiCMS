@@ -160,4 +160,21 @@ public class systemController {
         return "/system/user/userRight";
     }
 
+    /**
+     * 跳转到修改密码界面
+     * @return
+     */
+    @RequestMapping("/restPassword")
+    public String restPassword() {
+        return "/system/user/restPassword";
+    }
+
+    /**修改信息界面用户管理页面 - right
+     * @return
+     */
+    @RequestMapping("/restInfo")
+    public String restInfo() {
+        return "/system/user/restInfo";
+    }
+
 }
