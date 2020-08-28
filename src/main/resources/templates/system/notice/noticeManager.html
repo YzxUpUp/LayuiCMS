@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>公告管理</title>
@@ -68,28 +68,36 @@
 <div>
     <table class="layui-hide" id="noticeTable" lay-filter="noticeTable"></table>
     <div id="noticeToolBar" style="display: none;">
+        <shiro:hasPermission name="notice:create">
         <button type="button" lay-event="add" class="layui-btn layui-btn-sm"><span
                 class="layui-icon layui-icon-add-1"></span>添加公告
         </button>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="notice:batchDelete">
         <button type="button" lay-event="batchDelete" class="layui-btn layui-btn-sm layui-btn-danger"><span
                 class="layui-icon layui-icon-delete"></span>批量删除
         </button>
+        </shiro:hasPermission>
     </div>
 
     <div id="noticeRowBar" style="display: none;">
+        <shiro:hasPermission name="notice:update">
         <button type="button" lay-event="update" class="layui-btn layui-btn-sm"><span
                 class="layui-icon layui-icon-edit"></span>更新
         </button>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="notice:delete">
         <button type="button" lay-event="delete" class="layui-btn layui-btn-sm layui-btn-danger"><span
                 class="layui-icon layui-icon-delete"></span>删除
         </button>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="notice:view">
         <button type="button" lay-event="show" class="layui-btn layui-btn-sm"><span
                 class="layui-icon layui-icon-about"></span>查看
         </button>
+        </shiro:hasPermission>
     </div>
 </div>
-
-
 <!-- 数据表格结束 -->
 
 
@@ -134,7 +142,6 @@
     </div>
     <hr>
     <div id="show_content"></div>
-
 </div>
 <!-- 查看弹出层的结束-->
 

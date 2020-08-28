@@ -152,9 +152,9 @@ public class menuController {
         QueryWrapper<SysPermission> wrapper = new QueryWrapper<>();
         wrapper.eq("type",constant.TYPE_MNEU);
         wrapper.like(StringUtils.isNotEmpty(perVo.getTitle()), "title",perVo.getTitle());
-        wrapper.eq(perVo.getId() != null, "id", perVo.getId())
+        wrapper.and(perVo.getId() != null && perVo.getId() != null,Wrapper -> Wrapper.eq("id", perVo.getId())
                 .or()
-                .eq(perVo.getId() != null, "pid", perVo.getId());
+                .eq("pid", perVo.getId()));
         wrapper.orderByAsc("ordernum");
 
         //使用服务类根据page对象和筛选条件进行分页数据查找

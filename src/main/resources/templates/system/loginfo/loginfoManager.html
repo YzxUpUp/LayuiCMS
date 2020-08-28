@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>日志管理</title>
@@ -66,15 +66,19 @@
 <div>
     <table class="layui-hide" id="loginfoTable" lay-filter="loginfoTable"></table>
     <div id="loginfoToolBar" style="display: none;">
+        <shiro:hasPermission name="info:batchdelete">
         <button type="button" lay-event="batchDelete" class="layui-btn layui-btn-sm layui-btn-danger"><span
                 class="layui-icon layui-icon-delete"></span>批量删除
         </button>
+        </shiro:hasPermission>
     </div>
 
     <div id="loginfoRowBar" style="display: none;">
+        <shiro:hasPermission name="info:delete">
         <button type="button" lay-event="delete" class="layui-btn layui-btn-sm layui-btn-danger"><span
                 class="layui-icon layui-icon-delete"></span>删除
         </button>
+        </shiro:hasPermission>
     </div>
 </div>
 

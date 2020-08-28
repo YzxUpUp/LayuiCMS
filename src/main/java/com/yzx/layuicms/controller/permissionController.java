@@ -105,16 +105,16 @@ public class permissionController {
                 .eq(perVo.getId() != null, "pid", perVo.getId());
 
         //获取当前登录的用户信息
-//        activerUser loginUser = (activerUser) SecurityUtils.getSubject().getPrincipal();
-//        SysUser user = loginUser.getUser();
-//        //否则根据用户ID+角色+权限去查询
-//        //根据用户id查角色id
-//        Integer roleIdByUserId = this.userService.findRoleIdByUserId(user.getId());
-//        //根据角色id查询角色拥有的权限id
-//        List<Integer> permissionIdByRoleId = this.roleService.getPermissionIdByRoleId(roleIdByUserId);
-//
-//        //设置筛选条件，展示的菜单id必须在查询结果中
-//        wrapper.in("id",permissionIdByRoleId);
+        activerUser loginUser = (activerUser) SecurityUtils.getSubject().getPrincipal();
+        SysUser user = loginUser.getUser();
+        //否则根据用户ID+角色+权限去查询
+        //根据用户id查角色id
+        Integer roleIdByUserId = this.userService.findRoleIdByUserId(user.getId());
+        //根据角色id查询角色拥有的权限id
+        List<Integer> permissionIdByRoleId = this.roleService.getPermissionIdByRoleId(roleIdByUserId);
+
+        //设置筛选条件，展示的菜单id必须在查询结果中
+        wrapper.and(Wrapper -> Wrapper.in("id",permissionIdByRoleId));
         wrapper.orderByAsc("ordernum");
 
         //使用服务类根据page对象和筛选条件进行分页数据查找
