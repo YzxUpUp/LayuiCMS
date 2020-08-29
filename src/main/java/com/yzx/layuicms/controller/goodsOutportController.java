@@ -123,6 +123,11 @@ public class goodsOutportController {
                 outport.setRemark(outportRemark);
                 outport.setOperateperson(operateperson);
 
+                //更新进货单
+                Integer nowNumber = inport.getNumber() - outputNumber;
+                inport.setNumber(nowNumber);
+                this.inportService.updateById(inport);
+
                 this.outportService.save(outport);
             }else{
                 //不存在

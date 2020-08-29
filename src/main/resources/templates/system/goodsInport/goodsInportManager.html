@@ -341,6 +341,7 @@
                         content: $("#outPortDiv"),
                         title: '退货单',
                         success: function () {
+                            $("#dataFrm2")[0].reset();
                             //装载数据
                             form.val("dataFrm2",data);
                             url="/outport/addOutport";
@@ -419,25 +420,6 @@
                     // alert(data);
                     $.post(url,data,function (res) {
                         layer.msg(res.msg);
-                        $.ajax({
-                            url: '/inport/cutBackNumber?number='+data.number+'&id='+data.id
-                            // dataType: 'json', //服务器返回json格式数据
-                            // type: 'get', //HTTP请求类型
-                            // timeout: 10000, //超时时间设置为10秒；
-                            // success: function(data) {
-                            //     //给一个默认值（‘请选择’）
-                            //     var opt = '<option value="">请选择商品名</option>';
-                            //     //获取返回的数据
-                            //     var goods = data.data;
-                            //     //循环遍历
-                            //     $.each(goods,function (index, good) {
-                            //         opt += '<option value = "' + good.id + '">' + good.goodsname + '</option>';
-                            //     });
-                            //     $("#goodsid").html(opt);
-                            //     $("#goodsid2").html(opt);
-                            //     form.render('select');//需要渲染一下
-                            // }
-                        });
                         tableIns.reload();
                     });
                     layer.close(mainIndex);
