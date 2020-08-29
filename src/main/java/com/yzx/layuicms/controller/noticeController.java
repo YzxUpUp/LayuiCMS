@@ -12,6 +12,8 @@ import com.yzx.layuicms.domain.SysUser;
 import com.yzx.layuicms.service.SysNoticeService;
 import com.yzx.layuicms.vo.logInfoVo;
 import com.yzx.layuicms.vo.noticeVo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,12 +65,21 @@ public class noticeController {
     @RequestMapping("/updateNotice")
     public resultObj updateNotice(Integer id, String content) {
         try {
-            //首先根据id获取对应公告对象
-            SysNotice oldNotice = this.service.getById(id);
-            //为其设置新的内容
-            oldNotice.setContent(content);
-            //更新数据库中该公告的信息
-            this.service.updateById(oldNotice);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("notice:update")){
+                //存在
+                //首先根据id获取对应公告对象
+                SysNotice oldNotice = this.service.getById(id);
+                //为其设置新的内容
+                oldNotice.setContent(content);
+                //更新数据库中该公告的信息
+                this.service.updateById(oldNotice);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
             return resultObj.UPDATE_ERROR;
@@ -83,7 +94,16 @@ public class noticeController {
     @RequestMapping("/deleteNotice")
     public resultObj deleteNotice(Integer id) {
         try {
-            this.service.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("notice:delete")){
+                //存在
+                this.service.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         } catch (Exception e) {
             return resultObj.DELETE_ERROR;
@@ -98,7 +118,16 @@ public class noticeController {
     @RequestMapping("/batchDeleteNotice")
     public resultObj batchDeleteNotice(Integer[] ids) {
         try {
-            this.service.removeByIds(Arrays.asList(ids));
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("notice:batchDelete")){
+                //存在
+                this.service.removeByIds(Arrays.asList(ids));
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         } catch (Exception e) {
             return resultObj.DELETE_ERROR;
@@ -114,14 +143,23 @@ public class noticeController {
     public resultObj addNotice(noticeVo noticeVo,
                                HttpSession session) {
         try {
-            //设置创建事件
-            noticeVo.setCreatetime(new Date());
-            //从session域中获取当前登录账户的用户名信息
-            SysUser user = (SysUser) session.getAttribute("user");
-            //设置用户名
-            noticeVo.setOpername(user.getName());
-            //以该实体类为蓝本添加新的公告
-            this.service.save(noticeVo);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("notice:create")){
+                //存在
+                //设置创建事件
+                noticeVo.setCreatetime(new Date());
+                //从session域中获取当前登录账户的用户名信息
+                SysUser user = (SysUser) session.getAttribute("user");
+                //设置用户名
+                noticeVo.setOpername(user.getName());
+                //以该实体类为蓝本添加新的公告
+                this.service.save(noticeVo);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.ADD_SUCCESS;
         } catch (Exception e){
             return resultObj.ADD_ERROR;

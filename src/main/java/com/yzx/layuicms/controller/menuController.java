@@ -15,6 +15,7 @@ import com.yzx.layuicms.service.SysUserService;
 import com.yzx.layuicms.vo.deptVo;
 import com.yzx.layuicms.vo.permissionVo;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -172,8 +173,17 @@ public class menuController {
     @RequestMapping("/addMenu")
     public resultObj addMenu(SysPermission permission) {
         try {
-            permission.setType("menu");
-            this.permissionService.save(permission);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("menu:create")){
+                //存在
+                permission.setType("menu");
+                this.permissionService.save(permission);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.ADD_SUCCESS;
         }catch (Exception e){
             return resultObj.ADD_ERROR;
@@ -188,7 +198,16 @@ public class menuController {
     @RequestMapping("/deleteMenu")
     public resultObj deleteMenu(Integer id) {
         try {
-            this.permissionService.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("menu:delete")){
+                //存在
+                this.permissionService.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         }catch (Exception e){
             return resultObj.DELETE_ERROR;
@@ -203,7 +222,16 @@ public class menuController {
     @RequestMapping("/updateMenu")
     public resultObj updateDept(SysPermission permission) {
         try {
-            this.permissionService.updateById(permission);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("menu:update")){
+                //存在
+                this.permissionService.updateById(permission);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.UPDATE_SUCCESS;
         }catch (Exception e){
             return resultObj.UPDATE_ERROR;
@@ -217,11 +245,20 @@ public class menuController {
      */
     @RequestMapping("/checkMenu")
     public resultObj checkParent(Integer id) {
-        QueryWrapper<SysPermission> wrapper = new QueryWrapper<>();
-        wrapper.eq("pid",id);
-        List<SysPermission> list = this.permissionService.list(wrapper);
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("menu:delete")){
+            //存在
+            QueryWrapper<SysPermission> wrapper = new QueryWrapper<>();
+            wrapper.eq("pid",id);
+            List<SysPermission> list = this.permissionService.list(wrapper);
 
-        return list.size() > 0 ? resultObj.DELETE_ERROR : resultObj.DELETE_SUCCESS;
+            return list.size() > 0 ? resultObj.DELETE_ERROR : resultObj.DELETE_SUCCESS;
+        }else{
+            //不存在
+            return resultObj.AUTH_ERROR;
+        }
     }
 
 }

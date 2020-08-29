@@ -13,7 +13,9 @@ import com.yzx.layuicms.service.SysDeptService;
 import com.yzx.layuicms.service.SysUserService;
 import com.yzx.layuicms.util.saltUtil;
 import com.yzx.layuicms.vo.userVo;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -103,20 +105,29 @@ public class userController {
     public resultObj addUser(SysUser sysUser,
                              String hiredateString) {
         try {
-            SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date parse = sp.parse(hiredateString);
-            //生成随机盐
-            String salt = saltUtil.getSalt(8);
-            //对默认密码进行加密
-            Md5Hash md5Hash = new Md5Hash(constant.USER_DEFAULT_PWD,salt,1024);
-            //获取加密后的密码
-            String relPassword = md5Hash.toHex();
-            //为注册用户添加数据
-            sysUser.setSalt(salt);
-            sysUser.setPwd(relPassword);
-            sysUser.setHiredate(parse);
-            sysUser.setType(constant.USER_TYPE_NORMAL);
-            this.userService.save(sysUser);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("user:create")){
+                //存在
+                SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date parse = sp.parse(hiredateString);
+                //生成随机盐
+                String salt = saltUtil.getSalt(8);
+                //对默认密码进行加密
+                Md5Hash md5Hash = new Md5Hash(constant.USER_DEFAULT_PWD,salt,1024);
+                //获取加密后的密码
+                String relPassword = md5Hash.toHex();
+                //为注册用户添加数据
+                sysUser.setSalt(salt);
+                sysUser.setPwd(relPassword);
+                sysUser.setHiredate(parse);
+                sysUser.setType(constant.USER_TYPE_NORMAL);
+                this.userService.save(sysUser);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.ADD_SUCCESS;
         } catch (Exception e) {
             return resultObj.ADD_ERROR;
@@ -132,7 +143,16 @@ public class userController {
     @RequestMapping("/deleteUser")
     public resultObj deleteUser(Integer id) {
         try {
-            this.userService.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("user:delete")){
+                //存在
+                this.userService.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         } catch (Exception e) {
             return resultObj.DELETE_ERROR;
@@ -141,17 +161,26 @@ public class userController {
 
     /**
      * 更新用户信息
-     *
-     * @param userVo
+     * @param sysUser
+     * @param hiredateString
      * @return
      */
     @RequestMapping("/updateUser")
     public resultObj updateUser(SysUser sysUser,
                                 String hiredateString) {
         try {
-            SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date parse = sp.parse(hiredateString);
-            sysUser.setHiredate(parse);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("user:update")){
+                //存在
+                SimpleDateFormat sp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date parse = sp.parse(hiredateString);
+                sysUser.setHiredate(parse);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             this.userService.updateById(sysUser);
             return resultObj.UPDATE_SUCCESS;
         } catch (Exception e) {
@@ -180,19 +209,28 @@ public class userController {
     @RequestMapping("/restPwd")
     public resultObj restPwd(Integer id){
         try{
-            //根据id获取需要重置密码的用户
-            SysUser user = this.userService.getById(id);
-            //生成随机盐
-            String salt = saltUtil.getSalt(8);
-            //对默认密码进行加密
-            Md5Hash md5Hash = new Md5Hash(constant.USER_DEFAULT_PWD,salt,1024);
-            //获取加密后的密码
-            String relPassword = md5Hash.toHex();
-            //为注册用户添加数据
-            user.setSalt(salt);
-            user.setPwd(relPassword);
-            //插入数据
-            this.userService.updateById(user);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("user:resetPwd")){
+                //存在
+                //根据id获取需要重置密码的用户
+                SysUser user = this.userService.getById(id);
+                //生成随机盐
+                String salt = saltUtil.getSalt(8);
+                //对默认密码进行加密
+                Md5Hash md5Hash = new Md5Hash(constant.USER_DEFAULT_PWD,salt,1024);
+                //获取加密后的密码
+                String relPassword = md5Hash.toHex();
+                //为注册用户添加数据
+                user.setSalt(salt);
+                user.setPwd(relPassword);
+                //插入数据
+                this.userService.updateById(user);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.RESET_SUCCESS;
         }catch (Exception e){
             return resultObj.RESET_ERROR;
@@ -209,10 +247,19 @@ public class userController {
     public resultObj saveUserRole(Integer roleId,
                                   Integer userId) {
         try {
-            //删除指定角色的角色信息
-            this.userService.deleteUserRole(userId);
-            //重新添加分配的角色信息
-            this.userService.saveUserRole(roleId,userId);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("user:allocation")){
+                //存在
+                //删除指定角色的角色信息
+                this.userService.deleteUserRole(userId);
+                //重新添加分配的角色信息
+                this.userService.saveUserRole(roleId,userId);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DISPATCH_SUCCESS;
         }catch (Exception e){
             return resultObj.DISPATCH_ERROR;

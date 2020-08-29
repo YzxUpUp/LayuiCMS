@@ -9,11 +9,14 @@ import com.yzx.layuicms.common.resultObj;
 import com.yzx.layuicms.domain.SysDept;
 import com.yzx.layuicms.service.SysDeptService;
 import com.yzx.layuicms.vo.deptVo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.beans.IntrospectionException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -68,14 +71,23 @@ public class deptController {
 
     /**
      * 添加部门
-     * @param deptVo
+     * @param sysDept
      * @return
      */
     @RequestMapping("/addDept")
     public resultObj addDept(SysDept sysDept) {
         try {
-            sysDept.setCreatetime(new Date());
-            this.service.save(sysDept);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("dept:create")){
+                //存在
+                sysDept.setCreatetime(new Date());
+                this.service.save(sysDept);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.ADD_SUCCESS;
         }catch (Exception e){
             return resultObj.ADD_ERROR;
@@ -90,7 +102,16 @@ public class deptController {
     @RequestMapping("/deleteDept")
     public resultObj deleteDept(Integer id) {
         try {
-            this.service.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("dept:delete")){
+                //存在
+                this.service.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         }catch (Exception e){
             return resultObj.DELETE_ERROR;
@@ -99,13 +120,22 @@ public class deptController {
 
     /**
      * 更新部门信息
-     * @param deptVo
+     * @param sysDept
      * @return
      */
     @RequestMapping("/updateDept")
     public resultObj updateDept(SysDept sysDept) {
         try {
-            this.service.updateById(sysDept);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("dept:update")){
+                //存在
+                this.service.updateById(sysDept);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.UPDATE_SUCCESS;
         }catch (Exception e){
             return resultObj.UPDATE_ERROR;
@@ -119,11 +149,20 @@ public class deptController {
      */
     @RequestMapping("/checkDept")
     public resultObj checkParent(Integer id) {
-        QueryWrapper<SysDept> wrapper = new QueryWrapper<>();
-        wrapper.eq("pid",id);
-        List<SysDept> list = this.service.list(wrapper);
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("dept:delete")){
+            //存在
+            QueryWrapper<SysDept> wrapper = new QueryWrapper<>();
+            wrapper.eq("pid",id);
+            List<SysDept> list = this.service.list(wrapper);
 
-        return list.size() > 0 ? resultObj.DELETE_ERROR : resultObj.DELETE_SUCCESS;
+            return list.size() > 0 ? resultObj.DELETE_ERROR : resultObj.DELETE_SUCCESS;
+        }else{
+            //不存在
+            return resultObj.AUTH_ERROR;
+        }
     }
 
 }

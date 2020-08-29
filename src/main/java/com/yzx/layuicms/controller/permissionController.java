@@ -13,6 +13,7 @@ import com.yzx.layuicms.service.SysRoleService;
 import com.yzx.layuicms.service.SysUserService;
 import com.yzx.layuicms.vo.permissionVo;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,7 @@ public class permissionController {
 
     /**
      * 加载权限管理页面左侧导航树，从0开始遍历，此处与菜单管理一致
-     * @param permissionVo
+     * @param perVo
      * @return
      */
     @RequestMapping("/loadPermissionLeft")
@@ -131,8 +132,17 @@ public class permissionController {
     @RequestMapping("/addPermission")
     public resultObj addPermission(SysPermission permission) {
         try {
-            permission.setType("permission");
-            this.permissionService.save(permission);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("permission:create")){
+                //存在
+                permission.setType("permission");
+                this.permissionService.save(permission);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.ADD_SUCCESS;
         }catch (Exception e){
             return resultObj.ADD_ERROR;
@@ -147,7 +157,16 @@ public class permissionController {
     @RequestMapping("/deletePermission")
     public resultObj deletePermission(Integer id) {
         try {
-            this.permissionService.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("permission:delete")){
+                //存在
+                this.permissionService.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         }catch (Exception e){
             return resultObj.DELETE_ERROR;
@@ -162,7 +181,16 @@ public class permissionController {
     @RequestMapping("/updatePermission")
     public resultObj updatePermission(SysPermission permission) {
         try {
-            this.permissionService.updateById(permission);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("permission:update")){
+                //存在
+                this.permissionService.updateById(permission);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.UPDATE_SUCCESS;
         }catch (Exception e){
             return resultObj.UPDATE_ERROR;

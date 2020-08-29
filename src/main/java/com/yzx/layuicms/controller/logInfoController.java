@@ -9,6 +9,8 @@ import com.yzx.layuicms.common.resultObj;
 import com.yzx.layuicms.domain.SysLoginfo;
 import com.yzx.layuicms.service.SysLoginfoService;
 import com.yzx.layuicms.vo.logInfoVo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,10 +58,17 @@ public class logInfoController {
     @RequestMapping("/deleteLoginfo")
     public resultObj deleteLoginfo(Integer id) {
 
-        System.out.println(id);
-
         try {
-            this.service.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("info:delete")){
+                //存在
+                this.service.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         }catch (Exception e){
             return resultObj.DELETE_ERROR;
@@ -75,10 +84,17 @@ public class logInfoController {
     @RequestMapping("/batchDeleteLoginfo")
     public resultObj batchDeleteLoginfo(Integer[] ids) {
 
-        System.out.println(Arrays.asList(ids).toString());
-
         try {
-            this.service.removeByIds(Arrays.asList(ids));
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("info:batchdelete")){
+                //存在
+                this.service.removeByIds(Arrays.asList(ids));
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         }catch (Exception e){
             return resultObj.DELETE_ERROR;

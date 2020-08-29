@@ -30,6 +30,8 @@ public class resultObj {
     public static final resultObj  OPERATE_SUCCESS=new resultObj(constant.OK, "操作成功");
     public static final resultObj  OPERATE_ERROR=new resultObj(constant.ERROR, "操作失败");
 
+    public static final resultObj  AUTH_ERROR=new resultObj(constant.ERROR, "权限不足");
+
     private Integer code;
     private String msg;
 

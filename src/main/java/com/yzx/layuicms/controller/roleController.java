@@ -13,6 +13,8 @@ import com.yzx.layuicms.domain.treeNode;
 import com.yzx.layuicms.service.SysPermissionService;
 import com.yzx.layuicms.service.SysRoleService;
 import com.yzx.layuicms.vo.roleVo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,8 +66,17 @@ public class roleController {
     @RequestMapping("/addRole")
     public resultObj addRole(SysRole role){
         try {
-            role.setCreatetime(new Date());
-            this.roleService.save(role);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("role:create")){
+                //存在
+                role.setCreatetime(new Date());
+                this.roleService.save(role);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.ADD_SUCCESS;
         }catch (Exception e){
             return resultObj.ADD_ERROR;
@@ -80,7 +91,16 @@ public class roleController {
     @RequestMapping("/updateRole")
     public resultObj updateRole(SysRole role){
         try {
-            this.roleService.updateById(role);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("role:update")){
+                //存在
+                this.roleService.updateById(role);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.UPDATE_SUCCESS;
         }catch (Exception e){
             return resultObj.UPDATE_ERROR;
@@ -95,10 +115,17 @@ public class roleController {
     @RequestMapping("/deleteRole")
     public resultObj deleteRole(Integer id) {
 
-        System.out.println(id);
-
         try {
-            this.roleService.removeById(id);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("role:delete")){
+                //存在
+                this.roleService.removeById(id);
+            }else{
+                //不存在
+                return resultObj.AUTH_ERROR;
+            }
             return resultObj.DELETE_SUCCESS;
         }catch (Exception e){
             return resultObj.DELETE_ERROR;
@@ -152,16 +179,25 @@ public class roleController {
     public resultObj saveRolePermission(Integer roleId,
                                         Integer[] ids){
         try {
-            //首先删除对应roleId的所有权限信息
-            this.roleService.deleteRolePermission(roleId);
-            //再重新添加新分配的权限信息
-            if(ids != null && ids.length > 0){
-                for (Integer pid : ids) {
-                    this.roleService.saveRolePermission(roleId,pid);
+            //获取主体对象
+            Subject subject = SecurityUtils.getSubject();
+            //对主体对象的权限认证，是否有权限进行操作
+            if(subject.isPermitted("role:allocation")){
+                //存在
+                //首先删除对应roleId的所有权限信息
+                this.roleService.deleteRolePermission(roleId);
+                //再重新添加新分配的权限信息
+                if(ids != null && ids.length > 0){
+                    for (Integer pid : ids) {
+                        this.roleService.saveRolePermission(roleId,pid);
+                    }
+                    return resultObj.DISPATCH_SUCCESS;
+                }else{
+                    return resultObj.DISPATCH_ERROR;
                 }
-                return resultObj.DISPATCH_SUCCESS;
             }else{
-                return resultObj.DISPATCH_ERROR;
+                //不存在
+                return resultObj.AUTH_ERROR;
             }
         }catch (Exception e){
             return resultObj.DISPATCH_ERROR;
