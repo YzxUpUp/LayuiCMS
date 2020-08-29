@@ -30,7 +30,12 @@ public class resultObj {
     public static final resultObj  OPERATE_SUCCESS=new resultObj(constant.OK, "操作成功");
     public static final resultObj  OPERATE_ERROR=new resultObj(constant.ERROR, "操作失败");
 
+    public static final resultObj  OUTPORT_SUCCESS=new resultObj(constant.OK, "退货成功");
+    public static final resultObj  OUTPORT_ERROR=new resultObj(constant.ERROR, "退货失败");
+
     public static final resultObj  AUTH_ERROR=new resultObj(constant.ERROR, "权限不足");
+
+    public static final resultObj  PROVIDER_ERROR=new resultObj(constant.ERROR, "该供应商不供应这个商品");
 
     private Integer code;
     private String msg;

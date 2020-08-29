@@ -307,4 +307,130 @@ public class systemController {
         return "/system/user/restPassword";
     }
 
+    /**
+     * 跳转到客户管理界面
+     * @return
+     */
+    @RequestMapping("/customer")
+    public String customer() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("customer:view")){
+            //存在
+            return "/system/customer/customerManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
+    /**
+     * 跳转到供应商管理界面
+     * @return
+     */
+    @RequestMapping("/provider")
+    public String provider() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("provider:view")){
+            //存在
+            return "/system/provider/providerManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
+    /**
+     * 跳转到商品管理界面
+     * @return
+     */
+    @RequestMapping("/goods")
+    public String goods() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("goods:view")){
+            //存在
+            return "/system/goods/goodsManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
+    /**
+     * 跳转到进货单管理界面
+     * @return
+     */
+    @RequestMapping("/goodsInport")
+    public String goodsInport() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("inport:view")){
+            //存在
+            return "/system/goodsInport/goodsInportManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
+    /**
+     * 跳转到进货退货单管理界面
+     * @return
+     */
+    @RequestMapping("/goodsOutport")
+    public String goodsOutport() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("outport:view")){
+            //存在
+            return "/system/goodsOutport/goodsOutportManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
+    /**
+     * 跳转到销货单管理界面
+     * @return
+     */
+    @RequestMapping("/goodsSales")
+    public String goodsSales() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("sales:view")){
+            //存在
+            return "/system/goodsSales/goodsSalesManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
+    /**
+     * 跳转到销货退货单管理界面
+     * @return
+     */
+    @RequestMapping("/goodsSalesback")
+    public String goodsSalesback() {
+        //获取主体对象
+        Subject subject = SecurityUtils.getSubject();
+        //对主体对象的权限认证，是否有权限进行操作
+        if(subject.isPermitted("salesback:view")){
+            //存在
+            return "/system/goodsSalesback/goodsSalesbackManager";
+        }else{
+            //不存在
+            return "/error/noAuth";
+        }
+    }
+
 }

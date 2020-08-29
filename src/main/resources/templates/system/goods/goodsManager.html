@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+    <head>
+        <meta charset="UTF-8">
+        <title>商品管理</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+        <link rel="stylesheet" th:href="@{/layuicms2.0/layui/css/layui.css}"
+              href="../../../static/layuicms2.0/layui/css/layui.css" media="all"/>
+        <link rel="stylesheet" th:href="@{/layuicms2.0/css/public.css}"
+              href="../../../static/layuicms2.0/css/public.css" media="all"/>
+        <link rel="stylesheet" th:href="@{/layuicms2.0/layui_ext/dtree/dtree.css}"
+              href="../../../static/layuicms2.0/layui_ext/dtree/dtree.css" media="all"/>
+        <link rel="stylesheet" th:href="@{/layuicms2.0/layui_ext/dtree/font/dtreefont.css}"
+              href="../../../static/layuicms2.0/layui_ext/dtree/font/dtreefont.css" media="all"/>
+    </head>
+    <body>
+
+        <!--模糊查询工具栏开始-->
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+            <legend>查询条件</legend>
+        </fieldset>
+        <blockquote class="layui-elem-quote">
+            <form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">供应商</label>
+                        <div class="layui-input-inline">
+                            <select id="providerid" name="providerid" lay-search=""></select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="goodsname" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">生产批号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="productcode" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">批准文号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="promitcode" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品描述</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="description" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品规格</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="size" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align: center;">
+                        <button type="button" class="layui-btn" lay-submit="" lay-filter="doSearch"><span
+                                class="layui-icon layui-icon-search"></span>查询
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-warm"><span
+                                class="layui-icon layui-icon-refresh-1"></span>重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </blockquote>
+        <!--模糊查询工具栏结束-->
+
+        <!--数据表格开始-->
+        <div>
+            <table class="layui-hide" id="goodsTable" lay-filter="goodsTable"></table>
+            <div id="goodsToolBar" style="display: none;">
+                <button type="button" lay-event="add" class="layui-btn layui-btn-sm"><span
+                        class="layui-icon layui-icon-add-1"></span>添加商品
+                </button>
+            </div>
+
+            <div id="goodsRowBar" style="display: none;">
+                <button type="button" lay-event="update" class="layui-btn layui-btn-sm"><span
+                        class="layui-icon layui-icon-edit"></span>更新
+                </button>
+                <button type="button" lay-event="delete" class="layui-btn layui-btn-sm layui-btn-danger"><span
+                        class="layui-icon layui-icon-delete"></span>删除
+                </button>
+            </div>
+        </div>
+        <!--数据表格结束-->
+
+        <!-- 添加和修改的弹出层开始 -->
+        <div style="display: none;padding: 5px" id="addOrUpdateDiv">
+            <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">供应商</label>
+                        <div class="layui-input-inline">
+                            <select id="providerid2" name="providerid" lay-verify="required" lay-search=""></select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品名称</label>
+                        <div class="layui-input-inline">
+                            <input type="hidden" name="id">
+                            <input type="text" name="goodsname" lay-verify="required" autocomplete="off" placeholder="请输入商品名称" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">产地</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="produceplace" lay-verify="required" autocomplete="off" placeholder="请输入产地" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">包装单位</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="goodspackage" lay-verify="required" autocomplete="off" placeholder="请输入包装" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="description" lay-verify="required" autocomplete="off" placeholder="请输入商品描述" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">规格</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="size" lay-verify="required" autocomplete="off" placeholder="请输入规格" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">生产批号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="productcode" lay-verify="required" autocomplete="off" placeholder="请输入生产批号" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">批准文号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="promitcode" lay-verify="required" autocomplete="off" placeholder="请输入批准文号" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">价格(元)</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="price" lay-verify="required" autocomplete="off" placeholder="请输入销售价格" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">库存量</label>
+                        <div class="layui-input-inline">
+                            <!--                            <input type="hidden" name="id">-->
+                            <input type="text" name="number" lay-verify="required" autocomplete="off" placeholder="请输入库存量" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">库存预警值</label>
+                        <div class="layui-input-inline">
+                            <!--                            <input type="hidden" name="id">-->
+                            <input type="text" name="dangernum" lay-verify="required" autocomplete="off" placeholder="请输入库存预警值" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否可用</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="available" value="1" title="可用" checked="">
+                            <input type="radio" name="available" value="0" title="不可用" >
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align: center;">
+                        <button type="button" class="layui-btn" lay-submit="" id="doSubmit" ><span class="layui-icon layui-icon-add-1"></span>提交</button>
+                        <button type="reset" class="layui-btn layui-btn-warm"><span class="layui-icon layui-icon-refresh-1"></span>重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 添加和修改的弹出层结束 -->
+
+        <!-- 分配权限的弹出层开始 -->
+        <div style="display: none;" id="allocationDiv">
+            <ul id="goodsTree" class="dtree" data-id="0"></ul>
+        </div>
+        <!-- 分配权限的弹出层结束 -->
+
+        <script type="text/javascript" th:src="@{/layuicms2.0/layui/layui.js}"
+                src="../../../static/layuicms2.0/layui/layui.js"></script>
+        <script>
+            var tableIns;
+            layui.extend({
+                dtree: '/layuicms2.0/layui_ext/dtree/dtree'   //扩展dtree组件
+            }).use(['jquery', 'form', 'table','layer','dtree'],function () {
+                //绑定快捷键
+                var $ = layui.jquery;
+                var form = layui.form;
+                var table = layui.table;
+                var layer = layui.layer;
+                var dtree = layui.dtree;
+
+                //加载数据表格
+                tableIns = table.render({
+                    elem: '#goodsTable' //根据id绑定对应的table标签
+                    , url: '/goods/loadAllGoods' //从该地址获取数据
+                    , toolbar: '#goodsToolBar' //开启头部工具栏，并为其绑定左侧模板
+                    , defaultToolbar: ['filter']
+                    , title: '商品数据表'
+                    , height: 'full-205'
+                    , page: true //开启分页，会回传page和limit参数
+                    , cols: [ [
+                        {field: 'id', title: 'ID', align: 'center',width:'80'}
+                        , {field: 'goodsname', title: '商品名称', align: 'center',width:'100'}
+                        , {field: 'providerName', title: '商品供应商', align: 'center',width:'100'}
+                        , {field: 'produceplace', title: '产地', align: 'center',width:'100'}
+                        , {field: 'size', title: '规格', align: 'center',width:'100'}
+                        , {field: 'goodspackage', title: '包装单位', align: 'center',width:'100'}
+                        , {field: 'productcode', title: '生产批号', align: 'center',width:'100'}
+                        , {field: 'promitcode', title: '批准文号', align: 'center',width:'100'}
+                        , {field: 'description', title: '商品描述', align: 'center',width:'100'}
+                        , {field: 'price', title: '价格', align: 'center',width:'100',templet:function (obj) {
+                            return obj.price + '元';
+                            }}
+                        , {field: 'number', title: '库存', align: 'center',width:'100'}
+                        , {field: 'dangernum', title: '库存预警值', align: 'center',width:'100'}
+                        , {
+                            field: 'available', title: '工作', align: 'center', templet: function (obj) {
+                                return obj.available == 1 ? '<font style="color: blue">Y</font>' : '<font style="color: red">N</font>';
+                            },width:'100'
+                        }
+                        , {fixed: 'right', title: '操作', toolbar: '#goodsRowBar', align: 'center',width:'200'}
+                    ] ]
+                    , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                        var result;
+                        console.log(this);
+                        console.log(JSON.stringify(res));
+                        if (this.page.curr) {
+                            result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                        } else {
+                            result = res.data.slice(0, this.limit);
+                        }
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": res.msg, //解析提示文本
+                            "count": res.count, //解析数据长度
+                            "data": result //解析数据列表
+                        };
+                    }
+                });
+
+                //模糊查询
+                form.on("submit(doSearch)",function (data) {
+                    tableIns.reload({
+                        where: data.field,
+                        page: {
+                            curr: 1
+                        }
+                    });
+                    return false;
+                });
+
+                //监听头工具栏
+                table.on("toolbar(goodsTable)",function (obj) {
+                    switch (obj.event) {
+                        case "add":
+                            openAddLayer();
+                            break;
+                    }
+                });
+
+                //监听行工具栏
+                table.on("tool(goodsTable)",function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case "update":
+                            openUpdateLayer(data);
+                            break;
+                        case "delete":
+                            deleteGoods(data);
+                            break;
+                        case "allocation":
+                            openAllocationGoodsLayer(data);
+                            break;
+                    }
+                });
+
+                var url;
+                var mainIndex;
+                var Dtree;
+
+                //打开添加弹出层
+                function openAddLayer() {
+                    mainIndex = layer.open({
+                        type: 1,
+                        area: ['700px','500px'],
+                        content: $("#addOrUpdateDiv"),
+                        title: '添加新的商品',
+                        success: function () {
+                            $("#dataFrm")[0].reset();
+                            url="/goods/addGoods";
+                        }
+                    });
+                }
+
+                //打开修改弹出层
+                function openUpdateLayer(data) {
+                    mainIndex = layer.open({
+                        type: 1,
+                        area: ['700px','500px'],
+                        content: $("#addOrUpdateDiv"),
+                        title: '修改商品信息',
+                        success: function () {
+                            //装载数据
+                            form.val("dataFrm",data);
+                            url="/goods/updateGoods";
+                        }
+                    });
+                }
+
+                //删除商品的方法
+                function deleteGoods(data) {
+                    layer.confirm("确定要删除这个商品吗？",function () {
+                        $.post("/goods/deleteGoods",{id:data.id},function (res) {
+                            if(res.code == 200){
+                                tableIns.reload();
+                            }
+                            layer.msg(res.msg);
+                        });
+                    });
+                }
+
+                //动态赋值供应商下拉栏
+                $.ajax({
+                    url: '/provider/loadProviderName',
+                    dataType: 'json', //服务器返回json格式数据
+                    type: 'get', //HTTP请求类型
+                    timeout: 10000, //超时时间设置为10秒；
+                    success: function(data) {
+                        //给一个默认值（‘请选择’）
+                        var opt = '<option value="">请选择供应商</option>';
+                        //获取返回的数据
+                        var pros = data.data;
+                        //循环遍历
+                        $.each(pros,function (index, pro) {
+                            opt += '<option value = "' + pro.id + '">' + pro.providername + '</option>';
+                        });
+                        $("#providerid").html(opt);
+                        $("#providerid2").html(opt);
+                        form.render('select');//需要渲染一下
+                    }
+                });
+
+                //监听提交按钮点击事件
+                $("#doSubmit").click(function () {
+                    var data = $("#dataFrm").serialize();
+                    // alert(data);
+                    $.post(url,data,function (res) {
+                        layer.msg(res.msg);
+                        tableIns.reload();
+                    });
+                    layer.close(mainIndex);
+                });
+
+                //打开分配权限的弹出层
+                function openAllocationGoodsLayer(data) {
+                    mainIndex = layer.open({
+                        type: 1,
+                        content: $("#allocationDiv"),
+                        area: ['400px', '600px'],
+                        title: '分配【' + data.name + '】的权限',
+                        btn: ['确认分配'],
+                        btnAlign: 'c'
+                        ,yes: function(index, layero){
+                            //得到树选中的所有节点
+                            var permissionData = dtree.getCheckbarNodesParam("goodsTree");
+
+                            //生成http请求字符串
+                            var params="goodsId="+data.id;
+                            //遍历选中节点的id，拼接字符串
+                            $.each(permissionData,function(index,item){
+                                params+="&ids="+item.nodeId; //goodsId=xxx&ids=xx,xx,xx,xx,………………
+                            });
+
+                            //向服务器发送请求
+                            $.post("/goods/saveGoodsPermission",params,function(res){
+                                layer.close(mainIndex);
+                                layer.msg(res.msg);
+                            })
+                        }
+                        ,success: function () {
+                            //根据商品ID请求权限和菜单tree的json数据
+                            dtree.render({
+                                elem: "#goodsTree",
+                                url: "/goods/loadGoodsTree?goodsId=" + data.id,
+                                dataStyle: "layuiStyle",  //使用layui风格的数据格式
+                                dataFormat: "list",  //配置data的风格为list
+                                response: {message: "msg", statusCode: 0},  //修改response中返回数据的定义
+                                checkbar: true,
+                                checkbarType: "all" // 默认就是all，其他的值为： no-all  p-casc   self  only
+                            });
+                        }
+                    });
+                }
+            });
+
+        </script>
+    </body>
+</html>
