@@ -236,7 +236,9 @@
                         , {field: 'price', title: '价格', align: 'center',width:'100',templet:function (obj) {
                             return obj.price + '元';
                             }}
-                        , {field: 'number', title: '库存', align: 'center',width:'100'}
+                        , {field: 'number', title: '库存', align: 'center',width:'100',templet:function (obj) {
+                            return obj.number < obj.dangernum ? '<font color="red" style="font-weight: bold">'+obj.number+'</font>' : obj.number;
+                            }}
                         , {field: 'dangernum', title: '库存预警值', align: 'center',width:'100'}
                         , {
                             field: 'available', title: '工作', align: 'center', templet: function (obj) {

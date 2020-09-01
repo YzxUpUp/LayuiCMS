@@ -73,69 +73,6 @@
         </div>
         <!--数据表格结束-->
 
-        <!-- 添加和修改的弹出层开始 -->
-        <div style="display: none;padding: 5px" id="addOrUpdateDiv">
-            <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm">
-                <input type="hidden" name="operateperson" th:value="${session.user.name}">
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">供应商</label>
-                        <div class="layui-input-inline">
-                            <select id="providerid2" name="providerid" lay-verify="required" lay-search=""></select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">商品名称</label>
-                        <div class="layui-input-inline">
-                            <select id="goodsid2" name="goodsid" lay-search=""></select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">进货数量</label>
-                        <div class="layui-input-inline">
-                            <input type="hidden" name="id">
-                            <input type="text" name="number" lay-verify="required" autocomplete="off" placeholder="请输入商品进货数量" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">进货价格(元)</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="outportprice" lay-verify="required" autocomplete="off" placeholder="请输入进货价格(元)" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">支付方式</label>
-                        <div class="layui-input-inline">
-                            <input type="radio" name="paytype" value="银联" title="银联" checked="">
-                            <input type="radio" name="paytype" value="支付宝" title="支付宝" >
-                            <input type="radio" name="paytype" value="微信" title="微信" >
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">备注</label>
-                    <div class="layui-input-block">
-                        <textarea class="layui-textarea" name="remark" id="content"></textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block" style="text-align: center;">
-                        <button type="button" class="layui-btn" lay-submit="" id="doSubmit" ><span class="layui-icon layui-icon-add-1"></span>提交</button>
-                        <button type="reset" class="layui-btn layui-btn-warm"><span class="layui-icon layui-icon-refresh-1"></span>重置</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <!-- 添加和修改的弹出层结束 -->
-
-        <!-- 分配权限的弹出层开始 -->
-        <div style="display: none;" id="allocationDiv">
-            <ul id="outportTree" class="dtree" data-id="0"></ul>
-        </div>
-        <!-- 分配权限的弹出层结束 -->
-
         <script type="text/javascript" th:src="@{/layuicms2.0/layui/layui.js}"
                 src="../../../static/layuicms2.0/layui/layui.js"></script>
         <script>
@@ -223,80 +160,6 @@
                     return false;
                 });
 
-                //监听头工具栏
-                table.on("toolbar(outportTable)",function (obj) {
-                    switch (obj.event) {
-                        case "add":
-                            openAddLayer();
-                            break;
-                    }
-                });
-
-                //监听行工具栏
-                table.on("tool(outportTable)",function (obj) {
-                    var data = obj.data;
-                    switch (obj.event) {
-                        case "update":
-                            openUpdateLayer(data);
-                            break;
-                        case "delete":
-                            deleteOutport(data);
-                            break;
-                        case "allocation":
-                            openAllocationOutportLayer(data);
-                            break;
-                    }
-                });
-
-                var url;
-                var mainIndex;
-                var Dtree;
-
-                //打开添加弹出层
-                function openAddLayer() {
-                    $("#providerid2").removeAttr("disabled");
-                    $("#goodsid2").removeAttr("disabled");
-                    mainIndex = layer.open({
-                        type: 1,
-                        area: ['700px','500px'],
-                        content: $("#addOrUpdateDiv"),
-                        title: '添加新的商品进货',
-                        success: function () {
-                            $("#dataFrm")[0].reset();
-                            url="/outport/addOutport";
-                        }
-                    });
-                }
-
-                //打开修改弹出层
-                function openUpdateLayer(data) {
-                    $("#providerid2").attr("disabled","true");
-                    $("#goodsid2").attr("disabled","true");
-                    mainIndex = layer.open({
-                        type: 1,
-                        area: ['700px','500px'],
-                        content: $("#addOrUpdateDiv"),
-                        title: '修改商品进货信息',
-                        success: function () {
-                            //装载数据
-                            form.val("dataFrm",data);
-                            url="/outport/updateOutport";
-                        }
-                    });
-                }
-
-                //删除商品进货的方法
-                function deleteOutport(data) {
-                    layer.confirm("确定要删除这个商品进货吗？",function () {
-                        $.post("/outport/deleteOutport",{id:data.id},function (res) {
-                            if(res.code == 200){
-                                tableIns.reload();
-                            }
-                            layer.msg(res.msg);
-                        });
-                    });
-                }
-
                 //动态赋值供应商下拉栏
                 $.ajax({
                     url: '/provider/loadProviderName',
@@ -339,21 +202,7 @@
                     }
                 });
 
-                //监听提交按钮点击事件
-                $("#doSubmit").click(function () {
-                    var data = $("#dataFrm").serialize();
-                    // alert(data);
-                    $.post(url,data,function (res) {
-                        layer.msg(res.msg);
-                        tableIns.reload();
-                    });
-                    layer.close(mainIndex);
-                });
             });
-
-            window.onload = function () {
-                tableIns.reload();
-            };
 
         </script>
     </body>

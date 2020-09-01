@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yzx.layuicms.common.constant;
 import com.yzx.layuicms.common.dataGridView;
 import com.yzx.layuicms.common.resultObj;
+import com.yzx.layuicms.domain.BusProvider;
 import com.yzx.layuicms.domain.SysPermission;
 import com.yzx.layuicms.domain.BusCustomer;
 import com.yzx.layuicms.domain.treeNode;
@@ -128,6 +129,19 @@ public class customerController {
             return resultObj.DELETE_ERROR;
         }
 
+    }
+
+    /**
+     * 加载所有顾客的名称
+     *
+     * @return
+     */
+    @RequestMapping("/loadCustomerName")
+    public dataGridView loadCustomerName() {
+        QueryWrapper<BusCustomer> wrapper = new QueryWrapper<>();
+        wrapper.select("id","customername");
+        List<BusCustomer> allUserName = this.customerService.list(wrapper);
+        return new dataGridView(allUserName);
     }
 
 }

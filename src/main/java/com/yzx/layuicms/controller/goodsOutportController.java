@@ -123,10 +123,24 @@ public class goodsOutportController {
                 outport.setRemark(outportRemark);
                 outport.setOperateperson(operateperson);
 
-                //更新进货单
+                //判断退货量是否合理
+                if(inport.getNumber() < outputNumber){
+                    return resultObj.OUTPORTNUMBER_ERROR;
+                }
+
+                //更新进货单的进货量，减去退货的数量
                 Integer nowNumber = inport.getNumber() - outputNumber;
                 inport.setNumber(nowNumber);
                 this.inportService.updateById(inport);
+
+                //更新商品库存
+                //获取当前货单对应商品id
+                Integer goodsid = inport.getGoodsid();
+                //根据商品id获取商品信息，更新库存
+                BusGoods goods = this.goodsService.getById(goodsid);
+                int newNumber = goods.getNumber() - outputNumber;
+                goods.setNumber(newNumber);
+                this.goodsService.updateById(goods);
 
                 this.outportService.save(outport);
             }else{
@@ -137,56 +151,6 @@ public class goodsOutportController {
         }catch (Exception e){
             return resultObj.OUTPORT_ERROR;
         }
-    }
-
-    /**
-     * 更新商品进货退货单
-     * @param outport
-     * @return
-     */
-    @RequestMapping("/updateOutport")
-    public resultObj updateOutport(BusOutport outport){
-        try {
-            //获取主体对象
-            Subject subject = SecurityUtils.getSubject();
-            //对主体对象的权限认证，是否有权限进行操作
-            if(subject.isPermitted("outport:update")){
-                //存在
-                this.outportService.updateById(outport);
-            }else{
-                //不存在
-                return resultObj.AUTH_ERROR;
-            }
-            return resultObj.UPDATE_SUCCESS;
-        }catch (Exception e){
-            return resultObj.UPDATE_ERROR;
-        }
-    }
-
-    /**
-     * 根据id删除单条商品进货退货单信息
-     * @param id
-     * @return
-     */
-    @RequestMapping("/deleteOutport")
-    public resultObj deleteOutport(Integer id) {
-
-        try {
-            //获取主体对象
-            Subject subject = SecurityUtils.getSubject();
-            //对主体对象的权限认证，是否有权限进行操作
-            if(subject.isPermitted("outport:delete")){
-                //存在
-                this.outportService.removeById(id);
-            }else{
-                //不存在
-                return resultObj.AUTH_ERROR;
-            }
-            return resultObj.DELETE_SUCCESS;
-        }catch (Exception e){
-            return resultObj.DELETE_ERROR;
-        }
-
     }
 
 }

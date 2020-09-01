@@ -71,14 +71,15 @@ public class goodsInportController {
 
             //判断当前进货单是否有商品信息
             Integer goodsid = record.getGoodsid();
-            if(providerid != null){
+            if(goodsid != null){
                 //有，则查询商品名称以及商品规格并设置
                 String goodsname = this.goodsService.getById(goodsid).getGoodsname();
                 String goodssize = this.goodsService.getById(goodsid).getSize();
                 record.setGoodsName(goodsname);
                 record.setSize(goodssize);
             }else{
-                record.setProviderName("未命名");
+                record.setGoodsName("未知");
+                record.setSize("未知");
             }
         }
 
@@ -105,6 +106,18 @@ public class goodsInportController {
                     return resultObj.PROVIDER_ERROR;
                 }
                 inport.setInporttime(new Date());
+
+                //更新商品库存
+                //获取当前进货单新增的货量
+                Integer inportNumber = inport.getNumber();
+                //获取当前货单对应商品id
+                Integer goodsid = inport.getGoodsid();
+                //根据商品id获取商品信息，更新库存
+                BusGoods goods = this.goodsService.getById(goodsid);
+                int newNumber = goods.getNumber() + inportNumber;
+                goods.setNumber(newNumber);
+                this.goodsService.updateById(goods);
+
                 this.inportService.save(inport);
             }else{
                 //不存在
@@ -154,6 +167,20 @@ public class goodsInportController {
             //对主体对象的权限认证，是否有权限进行操作
             if(subject.isPermitted("inport:delete")){
                 //存在
+
+                //更新商品库存
+                //根据id获取当前进货单信息
+                BusInport inport = this.inportService.getById(id);
+                //获取当前进货单新增的货量
+                Integer inportNumber = inport.getNumber();
+                //获取当前货单对应商品id
+                Integer goodsid = inport.getGoodsid();
+                //根据商品id获取商品信息，更新库存
+                BusGoods goods = this.goodsService.getById(goodsid);
+                int newNumber = goods.getNumber() - inportNumber;
+                goods.setNumber(newNumber);
+                this.goodsService.updateById(goods);
+
                 this.inportService.removeById(id);
             }else{
                 //不存在
@@ -164,15 +191,6 @@ public class goodsInportController {
             return resultObj.DELETE_ERROR;
         }
 
-    }
-
-    @RequestMapping("/cutBackNumber")
-    public void cutBackNumber(Integer outputNumber,
-                              Integer id){
-        BusGoods goods = this.goodsService.getById(id);
-        Integer haveNumber = goods.getNumber();
-        Integer nowHaveNumber = haveNumber - outputNumber;
-        goods.setNumber(nowHaveNumber);
     }
 
 }

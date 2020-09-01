@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
     <head>
         <meta charset="UTF-8">
-        <title>商品进货管理</title>
+        <title>商品进货单管理</title>
         <meta name="renderer" content="webkit">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta http-equiv="Access-Control-Allow-Origin" content="*">
@@ -72,7 +72,7 @@
             <table class="layui-hide" id="inportTable" lay-filter="inportTable"></table>
             <div id="inportToolBar" style="display: none;">
                 <button type="button" lay-event="add" class="layui-btn layui-btn-sm"><span
-                        class="layui-icon layui-icon-add-1"></span>添加商品进货单
+                        class="layui-icon layui-icon-add-1"></span>添加商品进货单单
                 </button>
             </div>
 
@@ -108,16 +108,16 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">进货数量</label>
+                        <label class="layui-form-label">进货单数量</label>
                         <div class="layui-input-inline">
                             <input type="hidden" name="id">
-                            <input type="text" name="number" lay-verify="required" autocomplete="off" placeholder="请输入商品进货数量" class="layui-input">
+                            <input type="text" id="number" name="number" lay-verify="required" autocomplete="off" placeholder="请输入商品进货单数量" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">进货价格(元)</label>
+                        <label class="layui-form-label">进货单价格(元)</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="inportprice" lay-verify="required" autocomplete="off" placeholder="请输入进货价格(元)" class="layui-input">
+                            <input type="text" name="inportprice" lay-verify="required" autocomplete="off" placeholder="请输入进货单价格(元)" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -213,7 +213,7 @@
                     , url: '/inport/loadAllInport' //从该地址获取数据
                     , toolbar: '#inportToolBar' //开启头部工具栏，并为其绑定左侧模板
                     , defaultToolbar: ['filter']
-                    , title: '商品进货数据表'
+                    , title: '商品进货单数据表'
                     , height: 'full-205'
                     , page: true //开启分页，会回传page和limit参数
                     , cols: [ [
@@ -222,10 +222,10 @@
                         , {field: 'goodsName', title: '商品名称', align: 'center',width:'140'}
                         , {field: 'size', title: '规格', align: 'center',width:'100'}
                         , {field: 'paytype', title: '支付类型', align: 'center',width:'100'}
-                        , {field: 'inporttime', title: '进货时间', align: 'center',width:'100'}
+                        , {field: 'inporttime', title: '进货单时间', align: 'center',width:'100'}
                         , {field: 'operateperson', title: '操作员', align: 'center',width:'100'}
-                        , {field: 'number', title: '进货数量', align: 'center',width:'100'}
-                        , {field: 'inportprice', title: '进货价格', align: 'center',width:'100',templet:function (obj) {
+                        , {field: 'number', title: '进货单数量', align: 'center',width:'100'}
+                        , {field: 'inportprice', title: '进货单价格', align: 'center',width:'100',templet:function (obj) {
                             return obj.inportprice + '元';
                             }}
                         , {field: 'remark', title: '备注', align: 'center',width:'100',templet:function (obj) {
@@ -308,7 +308,7 @@
                         type: 1,
                         area: ['700px','500px'],
                         content: $("#addOrUpdateDiv"),
-                        title: '添加新的商品进货',
+                        title: '添加新的商品进货单',
                         success: function () {
                             $("#dataFrm")[0].reset();
                             url="/inport/addInport";
@@ -320,11 +320,12 @@
                 function openUpdateLayer(data) {
                     $("#providerid2").attr("disabled","true");
                     $("#goodsid2").attr("disabled","true");
+                    $("#number").attr("disabled","true");
                     mainIndex = layer.open({
                         type: 1,
                         area: ['700px','500px'],
                         content: $("#addOrUpdateDiv"),
-                        title: '修改商品进货信息',
+                        title: '修改商品进货单信息',
                         success: function () {
                             //装载数据
                             form.val("dataFrm",data);
@@ -349,9 +350,9 @@
                     });
                 }
 
-                //删除商品进货的方法
+                //删除商品进货单的方法
                 function deleteInport(data) {
-                    layer.confirm("确定要删除这个商品进货吗？",function () {
+                    layer.confirm("确定要删除这个商品吗单？",function () {
                         $.post("/inport/deleteInport",{id:data.id},function (res) {
                             if(res.code == 200){
                                 tableIns.reload();

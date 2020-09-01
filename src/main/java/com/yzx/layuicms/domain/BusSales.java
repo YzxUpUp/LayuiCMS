@@ -1,10 +1,15 @@
 package com.yzx.layuicms.domain;
 
 import java.math.BigDecimal;
+
+import cn.hutool.db.DaoTemplate;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -31,7 +36,7 @@ public class BusSales implements Serializable {
 
     private String paytype;
 
-    private LocalDateTime salestime;
+    private Date salestime;
 
     private String operateperson;
 
@@ -39,9 +44,18 @@ public class BusSales implements Serializable {
 
     private String remark;
 
-    private BigDecimal saleprice;
+    private Double saleprice;
 
     private Integer goodsid;
+
+    @TableField(exist = false)
+    private String customerName;
+
+    @TableField(exist = false)
+    private String goodsName;
+
+    @TableField(exist = false)
+    private String size;
 
 
 }

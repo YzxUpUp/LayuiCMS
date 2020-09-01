@@ -37,6 +37,10 @@ public class resultObj {
 
     public static final resultObj  PROVIDER_ERROR=new resultObj(constant.ERROR, "该供应商不供应这个商品");
 
+    public static final resultObj  OUTPORTNUMBER_ERROR=new resultObj(constant.ERROR, "退货量大于进货量");
+    public static final resultObj  SALESBACKNUMBER_ERROR=new resultObj(constant.ERROR, "退货量大于销货量");
+    public static final resultObj  SALESNUMBER_ERROR=new resultObj(constant.ERROR, "销货量大于库存量");
+
     private Integer code;
     private String msg;
 
