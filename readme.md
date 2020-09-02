@@ -61,3 +61,4 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 ## day12
 * 修改pom.xml中shiro的依赖，保证打包jar无错误
 * 开启shiro的权限认证以及资源认证的缓存
+* 项目已经发布到云服务器，访问地址：www.yzxupup.top:8080
