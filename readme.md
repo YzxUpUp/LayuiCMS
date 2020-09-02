@@ -61,4 +61,7 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 ## day12
 * 修改pom.xml中shiro的依赖，保证打包jar无错误
 * 开启shiro的权限认证以及资源认证的缓存
-* 项目已经发布到云服务器，访问地址：www.yzxupup.top:8080 密码统一为123123
+* 项目已经发布到云服务器，访问地址：www.yzxupup.top:8080 
+* 账号system、ls：超级管理员，可以访问所有内容
+* 账号ww、zl、sq、lb分别为基础数据管理员、仓库管理员、销售管理员、系统管理员，可以访问拥有权限的内容
+* 密码统一为123123
