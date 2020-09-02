@@ -1,6 +1,9 @@
 #设置端口
 server:
   port: 8080
+  servlet:
+    session:
+      timeout: 180m
 
 spring:
   datasource:

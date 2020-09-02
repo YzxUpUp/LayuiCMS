@@ -57,3 +57,7 @@ mybatis plus + springboot + shiro + mysql + thymeleaf
 * 完成销售管理功能
 * 修改商品管理页面，当库存低于预警值时，字体变红、加粗
 * 完成进货、进货退货、销货、销货退货时，改变对应商品库存值、进货单进货量、销货单销货量的功能
+
+## day12
+* 修改pom.xml中shiro的依赖，保证打包jar无错误
+* 开启shiro的权限认证以及资源认证的缓存
